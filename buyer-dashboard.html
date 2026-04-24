@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyer Dashboard | TrustHub Africa</title>
+  <meta name="description" content="Buyer Dashboard for TrustHub Africa. Discover trusted products and track your orders safely.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0B1F3A;
+      --secondary: #16A34A;
+      --background: #FFFFFF;
+      --accent: #F59E0B;
+      --text: #1F2937;
+      --muted: #6B7280;
+      --line: #E5E7EB;
+      --panel: #F8FAFC;
+      --panel-strong: #F3F7FB;
+      --shadow: 0 18px 40px rgba(11, 31, 58, 0.08);
+      --shadow-soft: 0 10px 26px rgba(11, 31, 58, 0.06);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: #F4F7FA;
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .dashboard-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: var(--background);
+      border-right: 1px solid rgba(11, 31, 58, 0.08);
+      padding: 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 0.95rem;
+      padding-bottom: 1.15rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: var(--primary);
+      color: #FFFFFF;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .brand-copy strong {
+      color: var(--primary);
+      font-size: 1rem;
+      line-height: 1.1;
+    }
+
+    .brand-copy span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .sidebar-nav {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      border-radius: 14px;
+      color: var(--muted);
+      background: transparent;
+      transition: background-color 0.22s ease, color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .nav-link strong {
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .nav-link span:last-child {
+      font-size: 0.78rem;
+      color: #94A3B8;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      background: rgba(22, 163, 74, 0.09);
+      color: var(--primary);
+      transform: translateX(3px);
+      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+      outline: none;
+    }
+
+    .nav-link.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .nav-link.active span:last-child {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .sidebar-note,
+    .profile-summary,
+    .support-panel,
+    .categories-panel,
+    .trusted-sellers-panel {
+      background: var(--background);
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      padding: 1rem;
+      display: grid;
+      gap: 0.8rem;
+      background: var(--panel);
+    }
+
+    .sidebar-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      width: fit-content;
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.12);
+      color: #9A6700;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .main-area {
+      padding: 1.5rem;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .topbar-copy h1 {
+      margin: 0;
+      color: var(--primary);
+      font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+    }
+
+    .topbar-copy p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      max-width: 40rem;
+      line-height: 1.6;
+    }
+
+    .topbar-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-width: 0;
+    }
+
+    .search-wrap {
+      min-width: min(22rem, 42vw);
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      border: 1px solid rgba(11, 31, 58, 0.12);
+      background: var(--background);
+      border-radius: 999px;
+      padding: 0.95rem 1rem 0.95rem 2.9rem;
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .search-wrap input:focus {
+      border-color: rgba(22, 163, 74, 0.45);
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+      outline: none;
+    }
+
+    .search-wrap::before {
+      content: "";
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      width: 0.95rem;
+      height: 0.95rem;
+      border: 2px solid #94A3B8;
+      border-radius: 999px;
+      transform: translateY(-60%);
+    }
+
+    .search-wrap::after {
+      content: "";
+      position: absolute;
+      left: 2rem;
+      top: 57%;
+      width: 0.5rem;
+      height: 2px;
+      background: #94A3B8;
+      transform: rotate(45deg);
+      border-radius: 999px;
+    }
+
+    .filter-select {
+      border: 1px solid rgba(11, 31, 58, 0.12);
+      background: var(--background);
+      border-radius: 999px;
+      padding: 0.95rem 1rem;
+      color: var(--text);
+      min-width: 180px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .filter-select:focus {
+      border-color: rgba(22, 163, 74, 0.45);
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+      outline: none;
+    }
+
+    .icon-button,
+    .profile-pill {
+      border: 1px solid rgba(11, 31, 58, 0.1);
+      background: var(--background);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .icon-button {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .icon-button:hover,
+    .profile-pill:hover {
+      transform: translateY(-2px);
+      border-color: rgba(22, 163, 74, 0.25);
+      box-shadow: 0 14px 28px rgba(11, 31, 58, 0.1);
+    }
+
+    .icon-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--primary);
+    }
+
+    .icon-dot {
+      position: absolute;
+      top: 11px;
+      right: 11px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--secondary);
+      border: 2px solid #FFFFFF;
+    }
+
+    .profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.45rem 0.65rem 0.45rem 0.45rem;
+      border-radius: 18px;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .profile-avatar,
+    .summary-avatar {
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #FFFFFF;
+      background: var(--primary);
+    }
+
+    .profile-avatar {
+      width: 40px;
+      height: 40px;
+      font-size: 0.95rem;
+    }
+
+    .profile-pill-copy {
+      display: grid;
+      gap: 0.1rem;
+      text-align: left;
+    }
+
+    .profile-pill-copy strong {
+      font-size: 0.92rem;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .profile-pill-copy span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .mobile-nav {
+      display: none;
+      gap: 0.7rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+      margin: 0 0 1.25rem;
+      scrollbar-width: none;
+    }
+
+    .mobile-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mobile-nav a {
+      white-space: nowrap;
+      padding: 0.78rem 1rem;
+      border-radius: 999px;
+      background: var(--background);
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      color: var(--primary);
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .panel {
+      background: var(--background);
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .panel-header h2,
+    .panel-header h3 {
+      margin: 0;
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+
+    .panel-header p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .inline-link {
+      color: var(--secondary);
+      font-weight: 700;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .live-feedback {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .action-grid,
+    .stats-grid,
+    .product-grid,
+    .saved-grid,
+    .seller-grid,
+    .category-grid,
+    .profile-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .action-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .action-button {
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      background: var(--panel);
+      color: var(--primary);
+      border-radius: 18px;
+      padding: 1rem;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background-color 0.22s ease;
+    }
+
+    .action-button strong {
+      display: block;
+      font-size: 0.96rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .action-button span {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .action-button.primary-action {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .action-button.primary-action span {
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .action-button:hover,
+    .stat-card:hover,
+    .product-card:hover,
+    .order-row:hover,
+    .saved-card:hover,
+    .chip:hover,
+    .seller-card:hover,
+    .support-action:hover,
+    .feedback-form button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 32px rgba(11, 31, 58, 0.12);
+    }
+
+    .action-button:hover {
+      border-color: rgba(22, 163, 74, 0.24);
+      background: #FFFFFF;
+    }
+
+    .action-button.primary-action:hover {
+      background: #132949;
+    }
+
+    .stat-card {
+      padding: 1.1rem;
+      border-radius: 20px;
+      background: var(--panel);
+      border: 1px solid rgba(11, 31, 58, 0.06);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .stat-card small {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .stat-card strong {
+      display: block;
+      color: var(--primary);
+      font-size: 1.75rem;
+      line-height: 1;
+    }
+
+    .stat-card p {
+      margin: 0.55rem 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .product-grid,
+    .saved-grid,
+    .seller-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .product-card,
+    .saved-card,
+    .seller-card {
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      border-radius: 22px;
+      overflow: hidden;
+      background: #FFFFFF;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .product-card:hover,
+    .saved-card:hover,
+    .seller-card:hover {
+      border-color: rgba(22, 163, 74, 0.22);
+    }
+
+    .product-art,
+    .saved-art {
+      min-height: 170px;
+      padding: 1.1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-art::before,
+    .saved-art::before {
+      content: "";
+      position: absolute;
+      inset: auto -25px -35px auto;
+      width: 120px;
+      height: 120px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.46);
+      transform: rotate(12deg);
+    }
+
+    .product-art.navy,
+    .saved-art.navy {
+      background: #DDE8F5;
+    }
+
+    .product-art.green,
+    .saved-art.green {
+      background: #DCF5E5;
+    }
+
+    .product-art.gold,
+    .saved-art.gold {
+      background: #FAE8BF;
+    }
+
+    .product-art.slate,
+    .saved-art.slate {
+      background: #E5EDF5;
+    }
+
+    .product-visual,
+    .saved-visual {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      box-shadow: 0 12px 18px rgba(11, 31, 58, 0.08);
+    }
+
+    .visual-laptop::before,
+    .visual-laptop::after,
+    .visual-headphones::before,
+    .visual-headphones::after,
+    .visual-power::before,
+    .visual-power::after,
+    .visual-bag::before,
+    .visual-bag::after,
+    .visual-journal::before,
+    .visual-journal::after,
+    .visual-bottle::before,
+    .visual-bottle::after,
+    .visual-speaker::before,
+    .visual-speaker::after {
+      content: "";
+      position: absolute;
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .visual-laptop::before {
+      width: 56px;
+      height: 34px;
+      left: 18px;
+      top: 18px;
+      border-radius: 8px;
+    }
+
+    .visual-laptop::after {
+      width: 66px;
+      height: 8px;
+      left: 13px;
+      bottom: 19px;
+      border-radius: 999px;
+    }
+
+    .visual-headphones::before {
+      width: 48px;
+      height: 48px;
+      left: 22px;
+      top: 15px;
+      border: 8px solid var(--primary);
+      background: transparent;
+      border-bottom: none;
+      border-radius: 999px 999px 0 0;
+    }
+
+    .visual-headphones::after {
+      width: 10px;
+      height: 24px;
+      left: 24px;
+      bottom: 18px;
+      background: var(--primary);
+      border-radius: 6px;
+      box-shadow: 34px 0 0 var(--primary);
+    }
+
+    .visual-power::before {
+      width: 34px;
+      height: 58px;
+      left: 29px;
+      top: 15px;
+      border-radius: 12px;
+    }
+
+    .visual-power::after {
+      width: 14px;
+      height: 6px;
+      left: 39px;
+      top: 10px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .visual-bag::before {
+      width: 48px;
+      height: 46px;
+      left: 22px;
+      top: 28px;
+      border-radius: 14px;
+    }
+
+    .visual-bag::after {
+      width: 28px;
+      height: 16px;
+      left: 32px;
+      top: 15px;
+      border: 6px solid var(--primary);
+      border-bottom: none;
+      background: transparent;
+      border-radius: 999px 999px 0 0;
+    }
+
+    .visual-journal::before {
+      width: 46px;
+      height: 60px;
+      left: 22px;
+      top: 15px;
+      border-radius: 10px;
+    }
+
+    .visual-journal::after {
+      width: 6px;
+      height: 52px;
+      left: 30px;
+      top: 19px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+    }
+
+    .visual-bottle::before {
+      width: 30px;
+      height: 54px;
+      left: 31px;
+      top: 18px;
+      border-radius: 12px 12px 18px 18px;
+    }
+
+    .visual-bottle::after {
+      width: 16px;
+      height: 10px;
+      left: 38px;
+      top: 10px;
+      border-radius: 5px;
+      background: var(--accent);
+    }
+
+    .visual-speaker::before {
+      width: 50px;
+      height: 60px;
+      left: 21px;
+      top: 15px;
+      border-radius: 16px;
+    }
+
+    .visual-speaker::after {
+      width: 26px;
+      height: 26px;
+      left: 33px;
+      top: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      position: relative;
+      z-index: 1;
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(11, 31, 58, 0.86);
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .product-body,
+    .saved-body,
+    .seller-body {
+      padding: 1.05rem;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .product-title-row,
+    .saved-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .product-title-row strong,
+    .saved-title-row strong,
+    .seller-body strong {
+      color: var(--primary);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .price-tag {
+      white-space: nowrap;
+      color: var(--secondary);
+      font-weight: 800;
+    }
+
+    .meta-line,
+    .seller-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .stars {
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      font-size: 0.84rem;
+    }
+
+    .card-button,
+    .support-action,
+    .feedback-form button {
+      border: none;
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
+    }
+
+    .card-button,
+    .feedback-form button {
+      background: var(--secondary);
+      color: #FFFFFF;
+      box-shadow: 0 10px 24px rgba(22, 163, 74, 0.22);
+    }
+
+    .card-button:hover,
+    .feedback-form button:hover {
+      background: #13803A;
+    }
+
+    .product-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 0.2rem;
+    }
+
+    .product-card-actions .card-button,
+    .product-card-actions .ghost-button {
+      flex: 1 1 150px;
+    }
+
+    .product-card a:focus-visible,
+    .ghost-button:focus-visible,
+    .card-button:focus-visible,
+    .filter-select:focus-visible,
+    .search-wrap input:focus-visible,
+    .support-action:focus-visible,
+    .feedback-form button:focus-visible {
+      outline: 3px solid rgba(22, 163, 74, 0.2);
+      outline-offset: 2px;
+    }
+
+    .toast-stack {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 120;
+      display: grid;
+      gap: 0.65rem;
+      width: min(340px, calc(100% - 2rem));
+    }
+
+    .toast {
+      background: var(--secondary);
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 18px 36px rgba(11, 31, 58, 0.18);
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .order-table {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .order-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) 0.8fr 0.8fr 0.72fr;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      background: var(--panel);
+      border-radius: 18px;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .order-product {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 0;
+    }
+
+    .order-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      flex: 0 0 auto;
+    }
+
+    .order-product strong {
+      display: block;
+      color: var(--primary);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .order-product span,
+    .order-meta {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .status-pill {
+      width: fit-content;
+      padding: 0.45rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .status-delivered {
+      background: rgba(22, 163, 74, 0.12);
+      color: #116731;
+    }
+
+    .status-transit {
+      background: rgba(245, 158, 11, 0.14);
+      color: #9A6700;
+    }
+
+    .status-processing {
+      background: rgba(11, 31, 58, 0.08);
+      color: var(--primary);
+    }
+
+    .ghost-button {
+      border: 1px solid rgba(11, 31, 58, 0.1);
+      background: #FFFFFF;
+      color: var(--primary);
+      border-radius: 14px;
+      padding: 0.8rem 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .ghost-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-soft);
+      border-color: rgba(22, 163, 74, 0.25);
+    }
+
+    .profile-summary,
+    .support-panel,
+    .categories-panel,
+    .trusted-sellers-panel {
+      padding: 1.25rem;
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: center;
+      gap: 0.95rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .summary-avatar {
+      width: 58px;
+      height: 58px;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .summary-header strong {
+      display: block;
+      color: var(--primary);
+      font-size: 1rem;
+      margin-bottom: 0.18rem;
+    }
+
+    .summary-header span {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .profile-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .profile-item {
+      padding: 0.8rem 0.9rem;
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .profile-item small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .profile-item strong {
+      color: var(--primary);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .categories-panel h3,
+    .support-panel h3,
+    .trusted-sellers-panel h3 {
+      margin: 0 0 0.35rem;
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .categories-panel p,
+    .support-panel p,
+    .trusted-sellers-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .category-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 1rem;
+    }
+
+    .chip {
+      padding: 0.85rem 0.95rem;
+      border-radius: 16px;
+      background: var(--panel);
+      border: 1px solid rgba(11, 31, 58, 0.06);
+      color: var(--primary);
+      font-size: 0.87rem;
+      font-weight: 700;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .support-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin: 1rem 0 0.95rem;
+    }
+
+    .support-action {
+      background: var(--panel);
+      color: var(--primary);
+      border: 1px solid rgba(11, 31, 58, 0.08);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feedback-form {
+      display: grid;
+      gap: 0.8rem;
+      margin-top: 0.9rem;
+    }
+
+    .feedback-form textarea {
+      width: 100%;
+      min-height: 112px;
+      resize: vertical;
+      border-radius: 16px;
+      border: 1px solid rgba(11, 31, 58, 0.12);
+      padding: 0.95rem 1rem;
+      background: var(--panel);
+      color: var(--text);
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .feedback-form textarea:focus {
+      border-color: rgba(22, 163, 74, 0.4);
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
+      outline: none;
+    }
+
+    .seller-grid {
+      margin-top: 1rem;
+    }
+
+    .seller-body {
+      gap: 0.55rem;
+    }
+
+    .seller-metric {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .seller-metric strong {
+      font-size: 0.86rem;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      padding: 1rem 0 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .footer strong {
+      color: var(--primary);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+    }
+
+    @media (max-width: 1180px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-grid,
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .mobile-nav {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .main-area {
+        padding: 1rem;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-tools {
+        flex-wrap: wrap;
+      }
+
+      .search-wrap {
+        min-width: 0;
+        flex: 1 1 100%;
+      }
+
+      .filter-select {
+        width: 100%;
+      }
+
+      .action-grid,
+      .stats-grid,
+      .product-grid,
+      .saved-grid,
+      .seller-grid,
+      .category-grid,
+      .profile-list,
+      .support-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .order-row {
+        grid-template-columns: 1fr;
+      }
+
+      .product-card-actions {
+        flex-direction: column;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .panel,
+      .profile-summary,
+      .support-panel,
+      .categories-panel,
+      .trusted-sellers-panel {
+        padding: 1rem;
+        border-radius: 20px;
+      }
+
+      .profile-pill {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body data-protected="true" data-role="buyer">
+  <div class="dashboard-shell">
+    <aside class="sidebar" aria-label="Buyer dashboard sidebar">
+      <a class="brand-block" href="index.html" aria-label="TrustHub Africa home">
+        <div class="brand-mark">TH</div>
+        <div class="brand-copy">
+          <strong>TrustHub Africa</strong>
+          <span>Africa&rsquo;s Trusted Marketplace</span>
+        </div>
+      </a>
+
+      <nav class="sidebar-nav">
+        <a class="nav-link active" href="#overview">
+          <strong>Overview</strong>
+          <span>Home</span>
+        </a>
+        <a class="nav-link" href="#recommended-products">
+          <strong>Products</strong>
+          <span>Browse</span>
+        </a>
+        <a class="nav-link" href="#recent-orders">
+          <strong>Orders</strong>
+          <span>Track</span>
+        </a>
+        <a class="nav-link" href="#saved-items">
+          <strong>Saved Items</strong>
+          <span>Wishlist</span>
+        </a>
+        <a class="nav-link" href="#trusted-sellers">
+          <strong>Trusted Sellers</strong>
+          <span>Verified</span>
+        </a>
+        <a class="nav-link" href="#support-feedback">
+          <strong>Support</strong>
+          <span>Help</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="mini-badge">Secure Buyer Space</span>
+        <p>Every purchase in your dashboard is organized around trusted sellers, clear delivery updates, and buyer support.</p>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar" id="overview">
+        <div class="topbar-copy">
+          <h1>Buyer Dashboard</h1>
+          <p>Welcome back, Buyer</p>
+          <p>Discover trusted products and track your orders safely.</p>
+        </div>
+
+        <div class="topbar-tools">
+          <label class="search-wrap" aria-label="Search trusted products">
+            <input type="search" id="buyer-market-search" placeholder="Search products, sellers, or categories">
+          </label>
+          <select id="buyer-category-filter" class="filter-select" aria-label="Filter marketplace products by category">
+            <option value="">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Books">Books</option>
+            <option value="School Items">School Items</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Gadgets">Gadgets</option>
+            <option value="Services">Services</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Others">Others</option>
+          </select>
+
+          <button class="icon-button" type="button" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V10a6 6 0 1 0-12 0v4.2a2 2 0 0 1-.6 1.4L4 17h5"></path>
+              <path d="M10 17a2 2 0 0 0 4 0"></path>
+            </svg>
+            <span class="icon-dot" aria-hidden="true"></span>
+          </button>
+
+          <a class="profile-pill" href="profile.html" aria-label="Open buyer profile">
+            <div class="profile-avatar" id="profileAvatar">BY</div>
+            <div class="profile-pill-copy">
+              <strong id="headerProfileName">Buyer</strong>
+              <span id="headerProfileState">Enugu, Nigeria</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" aria-label="Buyer mobile navigation">
+        <a href="#overview">Overview</a>
+        <a href="#recommended-products">Products</a>
+        <a href="#recent-orders">Orders</a>
+        <a href="#saved-items">Saved Items</a>
+        <a href="#trusted-sellers">Trusted Sellers</a>
+        <a href="#support-feedback">Support</a>
+      </nav>
+
+      <div class="content-grid">
+        <div class="stack">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Quick Actions</h2>
+                <p>Move faster through your trusted marketplace flow.</p>
+              </div>
+            </div>
+
+            <div class="action-grid">
+              <button class="action-button primary-action" id="browse-products-action" type="button">
+                <strong>Browse Products</strong>
+                <span>Explore verified picks from trusted sellers.</span>
+              </button>
+              <button class="action-button" id="view-orders-action" type="button">
+                <strong>View Orders</strong>
+                <span>Check delivery progress and order status.</span>
+              </button>
+              <button class="action-button" id="saved-items-action" type="button">
+                <strong>Saved Items</strong>
+                <span>Return to products you want to buy next.</span>
+              </button>
+              <button class="action-button" id="contact-support-action" type="button">
+                <strong>Contact Support</strong>
+                <span>Reach TrustHub support when you need help.</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Quick Stats</h2>
+                <p>Your latest activity at a glance.</p>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <article class="stat-card">
+                <small>Total Orders</small>
+                <strong id="buyer-stat-orders">0</strong>
+                <p>Trusted purchases completed and in progress across your account.</p>
+              </article>
+              <article class="stat-card">
+                <small>Saved Items</small>
+                <strong id="buyer-stat-saved">0</strong>
+                <p>Products saved for a safer, more confident checkout later.</p>
+              </article>
+              <article class="stat-card">
+                <small>Live Products</small>
+                <strong id="buyer-stat-products">0</strong>
+                <p>Listings currently uploaded by active TrustHub sellers.</p>
+              </article>
+              <article class="stat-card">
+                <small>Verified Sellers</small>
+                <strong id="buyer-stat-sellers">0</strong>
+                <p>Sellers with visible listings and completed verification details.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" id="recommended-products">
+            <div class="panel-header">
+              <div>
+                <h2>Recommended Products</h2>
+                <p>Buyer-friendly picks from well-rated sellers on TrustHub Africa.</p>
+              </div>
+              <span class="live-feedback" id="marketplace-feedback" role="status" aria-live="polite">Showing live seller uploads.</span>
+            </div>
+
+            <div class="product-grid" id="marketplace-product-grid"></div>
+          </section>
+
+          <section class="panel" id="recent-orders">
+            <div class="panel-header">
+              <div>
+                <h2>Recent Orders</h2>
+                <p>Track every order from checkout to delivery.</p>
+              </div>
+              <a class="inline-link" href="orders.html">View full history</a>
+            </div>
+
+            <div class="order-table" id="buyer-orders-list"></div>
+          </section>
+
+          <section class="panel" id="saved-items">
+            <div class="panel-header">
+              <div>
+                <h2>Saved Items</h2>
+                <p>Products you are keeping an eye on before your next purchase.</p>
+              </div>
+            </div>
+
+            <div class="saved-grid" id="saved-items-grid"></div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="profile-summary">
+            <div class="summary-header">
+              <div class="summary-avatar" id="summaryAvatar">BY</div>
+              <div>
+                <strong id="summaryName">Buyer</strong>
+                <span id="summaryVerification">Email Verified</span>
+              </div>
+            </div>
+
+            <div class="profile-list">
+              <div class="profile-item">
+                <small>Name</small>
+                <strong id="profileName">Buyer</strong>
+              </div>
+              <div class="profile-item">
+                <small>Email</small>
+                <strong id="profileEmail">buyer@trusthub.africa</strong>
+              </div>
+              <div class="profile-item">
+                <small>Phone</small>
+                <strong id="profilePhone">Not provided</strong>
+              </div>
+              <div class="profile-item">
+                <small>Location</small>
+                <strong id="profileLocation">Enugu</strong>
+              </div>
+              <div class="profile-item">
+                <small>State</small>
+                <strong id="profileState">Enugu</strong>
+              </div>
+              <div class="profile-item">
+                <small>Age</small>
+                <strong id="profileAge">Not provided</strong>
+              </div>
+              <div class="profile-item">
+                <small>Verification Status</small>
+                <strong id="profileVerificationStatus">Email Verified</strong>
+              </div>
+              <div class="profile-item">
+                <small>Member Type</small>
+                <strong>Buyer Account</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="categories-panel">
+            <h3>Categories</h3>
+            <p>Shop with confidence across the categories you care about most.</p>
+            <div class="category-grid" id="categoryGrid">
+              <div class="chip">Food</div>
+              <div class="chip">Gadgets</div>
+              <div class="chip">Books</div>
+              <div class="chip">School Items</div>
+              <div class="chip">Fashion</div>
+              <div class="chip">Services</div>
+            </div>
+          </section>
+
+          <section class="support-panel" id="support-feedback">
+            <h3>Support / Feedback</h3>
+            <p>Need help with an order, product, or seller experience? We are here to support you.</p>
+
+            <div class="support-actions">
+              <button class="support-action" type="button">Contact Support</button>
+              <button class="support-action" type="button">Report Issue</button>
+            </div>
+
+            <form class="feedback-form">
+              <textarea placeholder="Share feedback about your buying experience on TrustHub Africa."></textarea>
+              <button type="button">Send Feedback</button>
+            </form>
+          </section>
+
+          <section class="trusted-sellers-panel" id="trusted-sellers">
+            <h3>Trusted Sellers</h3>
+            <p>Reliable sellers with strong ratings and trusted marketplace activity.</p>
+
+            <div class="seller-grid" id="trusted-sellers-grid"></div>
+          </section>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div><strong>TrustHub Africa</strong> | Africa&rsquo;s Trusted Marketplace</div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="contact.html">Support</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const currency = new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        maximumFractionDigits: 0
+      });
+
+      function safeParse(value, fallback) {
+        try {
+          return value ? JSON.parse(value) : fallback;
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function safeString(value) {
+        return typeof value === "string" ? value.trim() : "";
+      }
+
+      function normalize(value) {
+        return safeString(value).toLowerCase();
+      }
+
+      function formatCurrency(value) {
+        return currency.format(Number(value) || 0);
+      }
+
+      function getInitials(fullName) {
+        return safeString(fullName)
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map((part) => part.charAt(0).toUpperCase())
+          .join("") || "BY";
+      }
+
+      function getSellerStorageId(seller) {
+        return normalize(seller.username || seller.email || "seller");
+      }
+
+      const demoNames = [
+        "premium ankara tote bag",
+        "bluetooth earbuds s2",
+        "organic shea body butter",
+        "portable study lamp"
+      ];
+
+      function isDemoProduct(product) {
+        const name = normalize(product && product.name);
+        const id = normalize(product && product.id);
+        return demoNames.includes(name) || /^p-00[1-4]$/.test(id);
+      }
+
+      function getVerificationStatus(user) {
+        if (safeString(user.verificationStatus)) {
+          return user.verificationStatus;
+        }
+        return safeString(user.verificationDetails) ? "Verification Submitted" : "Verification Pending";
+      }
+
+      function resolveImage(image) {
+        const value = safeString(image);
+        if (!value || value.startsWith("blob:")) {
+          return "logo.png";
+        }
+        return value;
+      }
+
+      function getStatusClass(status) {
+        const value = normalize(status);
+        if (value === "completed" || value === "delivered") {
+          return "status-delivered";
+        }
+        if (value === "shipped" || value === "in transit") {
+          return "status-transit";
+        }
+        return "status-processing";
+      }
+
+      const currentUser = safeParse(localStorage.getItem("trusthub-current-user"), {});
+      if (currentUser.role && currentUser.role !== "buyer") {
+        window.location.href = currentUser.role === "seller" ? "seller-dashboard.html" : "login.html";
+        return;
+      }
+
+      const allUsers = safeParse(localStorage.getItem("trusthub-users"), []);
+      const matchedUser = allUsers.find((user) => {
+        const sameRole = !user.role || user.role === "buyer";
+        const sameEmail = user.email && currentUser.email && normalize(user.email) === normalize(currentUser.email);
+        const sameUsername = user.username && currentUser.username && normalize(user.username) === normalize(currentUser.username);
+        return sameRole && (sameEmail || sameUsername);
+      }) || {};
+
+      const buyer = {
+        fullName: matchedUser.fullName || currentUser.fullName || "Buyer",
+        email: matchedUser.email || currentUser.email || "buyer@trusthub.africa",
+        phone: matchedUser.phone || currentUser.phone || "Not provided",
+        location: matchedUser.location || currentUser.location || "Enugu",
+        state: matchedUser.state || currentUser.state || "Enugu",
+        age: matchedUser.age || currentUser.age || "Not provided",
+        verification: currentUser.role === "buyer" || matchedUser.role === "buyer" ? "Email Verified" : "Verification Pending",
+        categories: Array.isArray(matchedUser.categories) && matchedUser.categories.length
+          ? matchedUser.categories
+          : ["Food", "Gadgets", "Books", "School Items", "Fashion", "Services"]
+      };
+
+      const buyerKey = normalize(buyer.email || currentUser.username || "buyer");
+      const savedKey = `trusthub-saved-items-${buyerKey}`;
+      let savedItems = safeParse(localStorage.getItem(savedKey), safeParse(localStorage.getItem("trusthub-saved-items"), []))
+        .filter((item) => item && !isDemoProduct(item));
+      const allOrders = safeParse(localStorage.getItem("trusthub-orders"), []);
+
+      const sellerUsers = allUsers.filter((user) => user.role === "seller");
+      const marketplaceProducts = sellerUsers.flatMap((seller) => {
+        const products = safeParse(localStorage.getItem(`trusthub-seller-products-${getSellerStorageId(seller)}`), []);
+        return products
+          .filter((product) => product && !isDemoProduct(product))
+          .map((product) => ({
+            ...product,
+            image: resolveImage(product.image),
+            sellerId: getSellerStorageId(seller),
+            sellerName: seller.shopName || seller.businessName || seller.fullName || `${seller.firstName || "Seller"} ${seller.lastName || ""}`.trim() || "Verified Seller",
+            sellerEmail: seller.email || "",
+            sellerUsername: seller.username || "",
+            rating: Number(seller.rating || 4.8),
+            verificationStatus: getVerificationStatus(seller),
+            isPro: Boolean(seller.isPro)
+          }));
+      });
+      let filteredMarketplaceProducts = marketplaceProducts.slice();
+
+      const uniqueSellerMap = new Map();
+      marketplaceProducts.forEach((product) => {
+        if (!uniqueSellerMap.has(product.sellerId)) {
+          uniqueSellerMap.set(product.sellerId, {
+            sellerId: product.sellerId,
+            sellerName: product.sellerName,
+            rating: product.rating,
+            verificationStatus: product.verificationStatus,
+            productCount: 1,
+            topCategory: product.category || "Marketplace",
+            isPro: product.isPro
+          });
+          return;
+        }
+
+        const current = uniqueSellerMap.get(product.sellerId);
+        current.productCount += 1;
+        if (!current.topCategory && product.category) {
+          current.topCategory = product.category;
+        }
+      });
+
+      const sellerSummaries = Array.from(uniqueSellerMap.values());
+      const buyerOrders = allOrders.filter((order) => {
+        const buyerMarkers = [
+          normalize(order && order.buyerEmail),
+          normalize(order && order.buyerUsername),
+          normalize(order && order.buyer)
+        ].filter(Boolean);
+
+        if (!buyerMarkers.length) {
+          return false;
+        }
+
+        return buyerMarkers.includes(normalize(buyer.email)) || buyerMarkers.includes(normalize(currentUser.username));
+      });
+
+      const profileFields = {
+        profileAvatar: getInitials(buyer.fullName),
+        summaryAvatar: getInitials(buyer.fullName),
+        headerProfileName: buyer.fullName,
+        headerProfileState: `${buyer.state}, Nigeria`,
+        summaryName: buyer.fullName,
+        summaryVerification: buyer.verification,
+        profileName: buyer.fullName,
+        profileEmail: buyer.email,
+        profilePhone: buyer.phone,
+        profileLocation: buyer.location,
+        profileState: buyer.state,
+        profileAge: buyer.age,
+        profileVerificationStatus: buyer.verification
+      };
+
+      Object.entries(profileFields).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value;
+        }
+      });
+
+      const categoryGrid = document.getElementById("categoryGrid");
+      const buyerMarketSearch = document.getElementById("buyer-market-search");
+      const buyerCategoryFilter = document.getElementById("buyer-category-filter");
+      const marketplaceFeedback = document.getElementById("marketplace-feedback");
+      if (categoryGrid) {
+        categoryGrid.innerHTML = "";
+        buyer.categories.slice(0, 8).forEach((category) => {
+          const chip = document.createElement("div");
+          chip.className = "chip";
+          chip.textContent = category;
+          categoryGrid.appendChild(chip);
+        });
+      }
+
+      function persistSavedItems() {
+        localStorage.setItem(savedKey, JSON.stringify(savedItems));
+        localStorage.setItem("trusthub-saved-items", JSON.stringify(savedItems));
+      }
+
+      function showToast(message) {
+        let stack = document.querySelector(".toast-stack");
+        if (!stack) {
+          stack = document.createElement("div");
+          stack.className = "toast-stack";
+          stack.setAttribute("aria-live", "polite");
+          document.body.appendChild(stack);
+        }
+
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        stack.appendChild(toast);
+
+        requestAnimationFrame(() => {
+          toast.classList.add("is-visible");
+        });
+
+        window.setTimeout(() => {
+          toast.classList.remove("is-visible");
+          window.setTimeout(() => toast.remove(), 220);
+        }, 2200);
+      }
+
+      function openProduct(product) {
+        localStorage.setItem("trusthub-selected-product", JSON.stringify(product));
+        window.location.href = "product.html";
+      }
+
+      function renderStats() {
+        const verifiedSellers = sellerSummaries.filter((seller) => normalize(seller.verificationStatus) !== "verification pending").length;
+        document.getElementById("buyer-stat-orders").textContent = String(buyerOrders.length);
+        document.getElementById("buyer-stat-saved").textContent = String(savedItems.length);
+        document.getElementById("buyer-stat-products").textContent = String(marketplaceProducts.length);
+        document.getElementById("buyer-stat-sellers").textContent = String(verifiedSellers);
+      }
+
+      function renderMarketplace() {
+        const productGrid = document.getElementById("marketplace-product-grid");
+        if (!productGrid) {
+          return;
+        }
+
+        if (!filteredMarketplaceProducts.length) {
+          productGrid.innerHTML = `
+            <article class="product-card">
+              <div class="product-body">
+                <div class="product-title-row">
+                  <strong>No products match this search</strong>
+                </div>
+                <p>Try a different keyword or category, or wait for more sellers to publish live listings.</p>
+              </div>
+            </article>
+          `;
+          marketplaceFeedback.textContent = marketplaceProducts.length
+            ? "No live products match your current search."
+            : "No live products yet. Seller uploads will appear here.";
+          return;
+        }
+
+        marketplaceFeedback.textContent = `Showing ${filteredMarketplaceProducts.length} live product${filteredMarketplaceProducts.length === 1 ? "" : "s"}.`;
+        const featuredProducts = filteredMarketplaceProducts.slice(0, 6);
+        productGrid.innerHTML = featuredProducts.map((product, index) => {
+          const palette = ["navy", "green", "gold", "slate"][index % 4];
+          const badge = product.isPro ? "Pro Seller" : "Trust Badge";
+          return `
+            <article class="product-card">
+              <div class="product-art ${palette}" style="background-image:url('${product.image}');background-size:cover;background-position:center;">
+                <span class="trust-badge">${badge}</span>
+              </div>
+              <div class="product-body">
+                <div class="product-title-row">
+                  <strong>${product.name || "Marketplace item"}</strong>
+                  <span class="price-tag">${formatCurrency(product.price)}</span>
+                </div>
+                <div class="meta-line">
+                  <span>Seller: ${product.sellerName}</span>
+                  <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  <span>${Number(product.rating || 4.8).toFixed(1)}</span>
+                </div>
+                <p>${safeString(product.description) || "Trusted listing from a verified seller."}</p>
+                <div class="product-card-actions">
+                  <button class="ghost-button" type="button" data-product-action="view" data-product-id="${product.id}" data-seller-id="${product.sellerId}">View Details</button>
+                  <button class="card-button" type="button" data-product-action="cart" data-product-id="${product.id}" data-seller-id="${product.sellerId}">Add to Cart</button>
+                  <button class="ghost-button" type="button" data-product-action="save" data-product-id="${product.id}" data-seller-id="${product.sellerId}">${savedItems.some((item) => item.id === product.id && item.sellerId === product.sellerId) ? "Saved" : "Save Item"}</button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      function renderSavedItems() {
+        const savedGrid = document.getElementById("saved-items-grid");
+        if (!savedGrid) {
+          return;
+        }
+
+        if (!savedItems.length) {
+          savedGrid.innerHTML = `
+            <article class="saved-card">
+              <div class="saved-body">
+                <div class="saved-title-row">
+                  <strong>No saved items yet</strong>
+                </div>
+                <p>Save products from live seller uploads and they will appear here.</p>
+              </div>
+            </article>
+          `;
+          return;
+        }
+
+        savedGrid.innerHTML = savedItems.slice(0, 6).map((item, index) => {
+          const palette = ["green", "gold", "slate", "navy"][index % 4];
+          return `
+            <article class="saved-card">
+              <div class="saved-art ${palette}" style="background-image:url('${resolveImage(item.image)}');background-size:cover;background-position:center;">
+                <span class="trust-badge">${item.isPro ? "Pro Seller" : "Trust Badge"}</span>
+              </div>
+              <div class="saved-body">
+                <div class="saved-title-row">
+                  <strong>${item.name || "Saved item"}</strong>
+                  <span class="price-tag">${formatCurrency(item.price)}</span>
+                </div>
+                <div class="meta-line">
+                  <span>Seller: ${item.sellerName || item.seller || "Verified Seller"}</span>
+                  <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  <span>${Number(item.rating || 4.8).toFixed(1)}</span>
+                </div>
+                <button class="ghost-button" type="button" data-saved-action="remove" data-product-id="${item.id}" data-seller-id="${item.sellerId || ""}">Remove</button>
+              </div>
+            </article>
+          `;
+        }).join("");
+      }
+
+      function renderOrders() {
+        const ordersList = document.getElementById("buyer-orders-list");
+        if (!ordersList) {
+          return;
+        }
+
+        if (!buyerOrders.length) {
+          ordersList.innerHTML = `
+            <article class="order-row">
+              <div class="order-product">
+                <div>
+                  <strong>No orders yet</strong>
+                  <span>Your order history will appear once you complete your first purchase.</span>
+                </div>
+              </div>
+              <div class="order-meta">
+                <div class="status-pill status-processing">Ready</div>
+              </div>
+              <div class="order-meta">-</div>
+              <a class="ghost-button" href="cart.html">Go to Cart</a>
+            </article>
+          `;
+          return;
+        }
+
+        ordersList.innerHTML = buyerOrders.slice(0, 4).map((order) => `
+          <article class="order-row">
+            <div class="order-product">
+              <div class="order-thumb" style="background-image:url('${resolveImage(order.image)}');background-size:cover;background-position:center;"></div>
+              <div>
+                <strong>${order.product || "Marketplace Order"}</strong>
+                <span>Order ${order.id || "THA-0000"}</span>
+              </div>
+            </div>
+            <div class="order-meta">
+              <div class="status-pill ${getStatusClass(order.status)}">${order.status || "Pending"}</div>
+            </div>
+            <div class="order-meta">${order.date || "-"}</div>
+            <a class="ghost-button" href="orders.html">Track Order</a>
+          </article>
+        `).join("");
+      }
+
+      function renderTrustedSellers() {
+        const sellerGrid = document.getElementById("trusted-sellers-grid");
+        if (!sellerGrid) {
+          return;
+        }
+
+        if (!sellerSummaries.length) {
+          sellerGrid.innerHTML = `
+            <article class="seller-card">
+              <div class="seller-body">
+                <strong>No active sellers yet</strong>
+                <p>Trusted sellers will appear here once they upload real marketplace products.</p>
+              </div>
+            </article>
+          `;
+          return;
+        }
+
+        sellerGrid.innerHTML = sellerSummaries.slice(0, 6).map((seller) => `
+          <article class="seller-card">
+            <div class="seller-body">
+              <span class="trust-badge">${seller.isPro ? "Pro Seller" : "Trust Badge"}</span>
+              <strong>${seller.sellerName}</strong>
+              <div class="seller-meta">
+                <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                <span>${Number(seller.rating || 4.8).toFixed(1)} rating</span>
+              </div>
+              <div class="seller-metric">
+                <span>${seller.topCategory || "Marketplace"}</span>
+                <strong>${seller.productCount} live item${seller.productCount === 1 ? "" : "s"}</strong>
+              </div>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function addToCart(product) {
+        const items = safeParse(localStorage.getItem("trusthub-cart"), []);
+        const existing = items.find((item) => item.id === product.id && (item.sellerId || "") === (product.sellerId || ""));
+
+        if (existing) {
+          existing.quantity = (Number(existing.quantity) || 1) + 1;
+        } else {
+          items.push({
+            id: product.id,
+            name: product.name,
+            seller: product.sellerName,
+            sellerId: product.sellerId,
+            sellerEmail: product.sellerEmail || "",
+            sellerUsername: product.sellerUsername || "",
+            price: Number(product.price) || 0,
+            image: resolveImage(product.image),
+            quantity: 1
+          });
+        }
+
+        localStorage.setItem("trusthub-cart", JSON.stringify(items));
+        localStorage.setItem("trusthub-selected-product", JSON.stringify(product));
+      }
+
+      function applyMarketplaceFilters() {
+        const query = normalize(buyerMarketSearch.value);
+        const category = normalize(buyerCategoryFilter.value);
+
+        filteredMarketplaceProducts = marketplaceProducts.filter((product) => {
+          const haystack = normalize(`${product.name} ${product.sellerName} ${product.category} ${product.description || ""}`);
+          const matchesQuery = !query || haystack.includes(query);
+          const matchesCategory = !category || normalize(product.category) === category;
+          return matchesQuery && matchesCategory;
+        });
+
+        renderMarketplace();
+      }
+
+      function toggleSavedItem(product) {
+        const index = savedItems.findIndex((item) => item.id === product.id && (item.sellerId || "") === (product.sellerId || ""));
+        if (index >= 0) {
+          savedItems.splice(index, 1);
+        } else {
+          savedItems.unshift(product);
+        }
+
+        persistSavedItems();
+        renderSavedItems();
+        renderMarketplace();
+        renderStats();
+      }
+
+      document.getElementById("marketplace-product-grid").addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+
+        const action = target.getAttribute("data-product-action");
+        const productId = target.getAttribute("data-product-id");
+        const sellerId = target.getAttribute("data-seller-id");
+        if (!action || !productId) {
+          return;
+        }
+
+        const product = marketplaceProducts.find((item) => item.id === productId && item.sellerId === sellerId);
+        if (!product) {
+          return;
+        }
+
+        if (action === "cart") {
+          addToCart(product);
+          target.textContent = "Added to Cart";
+          showToast(`${product.name} added to cart.`);
+        }
+
+        if (action === "view") {
+          openProduct(product);
+        }
+
+        if (action === "save") {
+          toggleSavedItem(product);
+          showToast(savedItems.some((item) => item.id === product.id && item.sellerId === product.sellerId)
+            ? `${product.name} saved.`
+            : `${product.name} removed from saved items.`);
+        }
+      });
+
+      document.getElementById("saved-items-grid").addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+
+        const action = target.getAttribute("data-saved-action");
+        const productId = target.getAttribute("data-product-id");
+        const sellerId = target.getAttribute("data-seller-id");
+        if (action !== "remove" || !productId) {
+          return;
+        }
+
+        savedItems = savedItems.filter((item) => !(item.id === productId && String(item.sellerId || "") === String(sellerId || "")));
+        persistSavedItems();
+        renderSavedItems();
+        renderMarketplace();
+        renderStats();
+        showToast("Item removed from saved items.");
+      });
+
+      document.getElementById("browse-products-action").addEventListener("click", () => {
+        document.getElementById("recommended-products").scrollIntoView({ behavior: "smooth" });
+      });
+
+      document.getElementById("view-orders-action").addEventListener("click", () => {
+        window.location.href = "orders.html";
+      });
+
+      document.getElementById("saved-items-action").addEventListener("click", () => {
+        document.getElementById("saved-items").scrollIntoView({ behavior: "smooth" });
+      });
+
+      document.getElementById("contact-support-action").addEventListener("click", () => {
+        window.location.href = "contact.html";
+      });
+
+      buyerMarketSearch.addEventListener("input", applyMarketplaceFilters);
+      buyerCategoryFilter.addEventListener("change", applyMarketplaceFilters);
+
+      renderStats();
+      renderMarketplace();
+      renderSavedItems();
+      renderOrders();
+      renderTrustedSellers();
+    });
+  </script>
+</body>
+</html>

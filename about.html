@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About TrustHub Africa</title>
+  <meta name="description" content="About TrustHub Africa, Africa's trusted marketplace for students, young people, artisans, and small businesses.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .about-main .section {
+      padding: 4.5rem 0;
+    }
+
+    .page-intro {
+      background: rgba(11, 31, 58, 0.04);
+      padding: 5rem 0 4rem;
+      border-bottom: 1px solid rgba(11, 31, 58, 0.12);
+    }
+
+    .page-intro h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--primary);
+      margin-bottom: 0.9rem;
+      line-height: 1.08;
+    }
+
+    .page-intro p {
+      max-width: 720px;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .section-title {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .section-title h2 {
+      color: var(--primary);
+      font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+      margin-bottom: 0.6rem;
+      line-height: 1.15;
+    }
+
+    .section-title p {
+      color: var(--text);
+    }
+
+    .content-card {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid rgba(11, 31, 58, 0.12);
+      border-radius: 1rem;
+      padding: 1.4rem;
+      box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
+    }
+
+    .content-card p {
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .content-card p + p {
+      margin-top: 0.8rem;
+    }
+
+    .soft-bg {
+      background: rgba(11, 31, 58, 0.04);
+    }
+
+    .point-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .point-card {
+      background: var(--surface);
+      border: 1px solid rgba(11, 31, 58, 0.12);
+      border-radius: 1rem;
+      padding: 1.1rem 1rem;
+      color: var(--text);
+      box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .point-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 34px rgba(11, 31, 58, 0.12);
+    }
+
+    .point-card strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .tag-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.8rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .tag-item {
+      background: var(--surface);
+      border: 1px solid rgba(11, 31, 58, 0.12);
+      border-radius: 999px;
+      padding: 0.65rem 0.9rem;
+      text-align: center;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .about-cta {
+      background: var(--primary);
+    }
+
+    .about-cta .cta-content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .about-cta h2 {
+      color: #FFFFFF;
+      font-size: clamp(1.3rem, 3.3vw, 2rem);
+      max-width: 700px;
+      line-height: 1.2;
+    }
+
+    .about-cta .cta-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .about-cta .btn-outline {
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+    }
+
+    .about-cta .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    @media (max-width: 900px) {
+      .point-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tag-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .about-main .section {
+        padding: 3.3rem 0;
+      }
+
+      .page-intro {
+        padding: 4rem 0 3rem;
+      }
+
+      .tag-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .about-cta .cta-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .about-cta .cta-actions {
+        width: 100%;
+      }
+
+      .about-cta .cta-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand" aria-label="TrustHub Africa home">
+        <img src="logo.png" alt="TrustHub Africa logo" class="brand-logo">
+        <span class="brand-text">TrustHub Africa</span>
+      </a>
+
+      <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="index.html#get-started">Get Started</a></li>
+          <li><a href="index.html#buyer">Become a Buyer</a></li>
+          <li><a href="seller-signup.html">Become a Seller</a></li>
+          <li><a href="#footer">Finish</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <span class="theme-toggle__sun" aria-hidden="true">Light</span>
+          <span class="theme-toggle__moon" aria-hidden="true">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="about-main">
+    <section class="page-intro">
+      <div class="container">
+        <h1>About TrustHub Africa</h1>
+        <p>Africa's Trusted Marketplace built for students, young people, and small businesses.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>What is TrustHub Africa?</h2>
+        </div>
+        <div class="content-card">
+          <p>TrustHub Africa is a marketplace designed to help people buy and sell safely.</p>
+          <p>We connect verified sellers with real buyers and provide a system that supports secure payments, trusted delivery, and reliable transactions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft-bg">
+      <div class="container">
+        <div class="section-title">
+          <h2>The Problem We Solve</h2>
+        </div>
+        <div class="point-grid">
+          <article class="point-card"><strong>People get scammed</strong> when buying online.</article>
+          <article class="point-card"><strong>Sellers do not trust buyers</strong> during transactions.</article>
+          <article class="point-card"><strong>Delivery is unreliable</strong> and often unstructured.</article>
+          <article class="point-card"><strong>No clear system</strong> for student-based selling.</article>
+          <article class="point-card"><strong>Verification is difficult,</strong> so people cannot tell who is real.</article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Our Solution</h2>
+        </div>
+        <div class="content-card">
+          <p>We created TrustHub Africa to make buying and selling simple and safe.</p>
+          <p>By verifying users, structuring transactions, and building a trusted system, we reduce risk and help people trade with confidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft-bg">
+      <div class="container">
+        <div class="section-title">
+          <h2>Our Mission</h2>
+        </div>
+        <div class="content-card">
+          <p>To build a trusted marketplace where young people and small businesses can buy, sell, and grow safely.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Our Vision</h2>
+        </div>
+        <div class="content-card">
+          <p>To become Africa's most trusted platform for safe and reliable online transactions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft-bg">
+      <div class="container">
+        <div class="section-title">
+          <h2>Who We Serve</h2>
+        </div>
+        <div class="tag-grid">
+          <div class="tag-item">Students</div>
+          <div class="tag-item">Young entrepreneurs</div>
+          <div class="tag-item">Artisans</div>
+          <div class="tag-item">Small business owners</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Why TrustHub Africa?</h2>
+        </div>
+        <div class="tag-grid">
+          <div class="tag-item">Verified users</div>
+          <div class="tag-item">Structured transactions</div>
+          <div class="tag-item">Focus on safety</div>
+          <div class="tag-item">Built for local communities</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about-cta">
+      <div class="container cta-content">
+        <h2>Join TrustHub Africa today and start buying or selling with confidence.</h2>
+        <div class="cta-actions">
+          <a href="index.html#buyer" class="btn btn-primary">Become a Buyer</a>
+          <a href="seller-signup.html" class="btn btn-outline">Become a Seller</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h3>TrustHub Africa</h3>
+        <p>Africa's Trusted Marketplace</p>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>About</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/2347017509585?text=Hello%20TrustHub%20Africa%2C%20I%20need%20support">WhatsApp</a></li>
+          <li><a href="mailto:trusthubafrica@gmail.com">Email</a></li>
+          <li><a href="tel:+2347017509585">Phone</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Social</h4>
+        <ul>
+          <li><a href="https://www.facebook.com/trusthubafrica/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/trusthubafrica/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://whatsapp.com/channel/0029Vb7T8lB4dTnJ5JcRPZ3A" target="_blank" rel="noopener">WhatsApp Channel</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2026 TrustHub Africa. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

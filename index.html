@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustHub Africa | Africa&rsquo;s Trusted Marketplace</title>
+  <meta name="description" content="TrustHub Africa is a verified marketplace for students, young people, artisans, and small businesses.">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand" aria-label="TrustHub Africa home">
+        <img src="logo.png" alt="TrustHub Africa logo" class="brand-logo">
+        <span class="brand-text">TrustHub Africa</span>
+      </a>
+
+      <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="#get-started">Get Started</a></li>
+          <li><a href="buyer-signup.html">Shop</a></li>
+          <li><a href="seller-signup.html">Sell</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="social.html">Social</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-ghost">Login</a>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <span class="theme-toggle__sun" aria-hidden="true">Light</span>
+          <span class="theme-toggle__moon" aria-hidden="true">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section-soft">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="hero-kicker">Verified Marketplace Platform</p>
+          <h1>TrustHub Africa</h1>
+          <p class="hero-subheadline">Africa's Trusted Marketplace</p>
+          <p class="hero-description">Buy, sell, and earn safely with verified users, secure payments, and trusted delivery.</p>
+          <div class="hero-cta">
+            <a href="#get-started" class="btn btn-primary">Get Started</a>
+            <a href="seller-signup.html" class="btn btn-outline">Sell</a>
+          </div>
+          <p class="hero-trust">Trusted by students and young entrepreneurs across Enugu.</p>
+        </div>
+        <div class="hero-panel" aria-hidden="true">
+          <div class="hero-panel__card">
+            <p class="hero-panel__title">Trust Score</p>
+            <p class="hero-panel__value">98.4%</p>
+          </div>
+          <div class="hero-panel__card">
+            <p class="hero-panel__title">Verified Traders</p>
+            <p class="hero-panel__value">12k+</p>
+          </div>
+          <div class="hero-panel__card">
+            <p class="hero-panel__title">Protected Transactions</p>
+            <p class="hero-panel__value">24/7</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Trust and protection">
+      <div class="container trust-strip-grid">
+        <article class="trust-strip-card">
+          <span class="trust-strip-icon" aria-hidden="true">&#10003;</span>
+          <h3>Verified Sellers</h3>
+          <p>Only trusted and reviewed sellers can list products</p>
+        </article>
+        <article class="trust-strip-card">
+          <span class="trust-strip-icon" aria-hidden="true">&#128274;</span>
+          <h3>Secure Payments</h3>
+          <p>Your money is protected until you confirm delivery</p>
+        </article>
+        <article class="trust-strip-card">
+          <span class="trust-strip-icon" aria-hidden="true">&#128737;</span>
+          <h3>Buyer Protection</h3>
+          <p>We help resolve issues and protect your orders</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="search-section" aria-label="Marketplace search">
+      <div class="container">
+        <form class="search-form" action="#" method="get">
+          <label for="market-search" class="sr-only">Search products, sellers, or categories</label>
+          <input id="market-search" name="search" type="search" placeholder="Search products, sellers, or categories">
+          <label for="market-category" class="sr-only">Filter by category</label>
+          <select id="market-category" name="category">
+            <option value="">All categories</option>
+            <option value="Food">Food</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Books">Books</option>
+            <option value="School Items">School Items</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Gadgets">Gadgets</option>
+            <option value="Services">Services</option>
+            <option value="Beauty">Beauty</option>
+            <option value="Others">Others</option>
+          </select>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="get-started">
+      <div class="container">
+        <div class="section-head">
+          <h2>How do you want to use TrustHub?</h2>
+        </div>
+        <div class="start-grid">
+          <article class="start-card" id="buyer">
+            <h3>I want to Buy</h3>
+            <p>Find products from verified sellers around you.</p>
+            <a href="buyer-signup.html" class="btn btn-primary">Start as Buyer</a>
+          </article>
+          <article class="start-card" id="seller">
+            <h3>I want to Sell</h3>
+            <p>Start selling and reach real buyers in your area.</p>
+            <a href="seller-signup.html" class="btn btn-primary">Start as Seller</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="about">
+      <div class="container">
+        <div class="section-head">
+          <h2>What is TrustHub Africa?</h2>
+        </div>
+        <div class="content-panel">
+          <p>TrustHub Africa is a verified marketplace built for students, young people, artisans, and small businesses.</p>
+          <p>We help you buy and sell safely by connecting you with real people, secure payments, and trusted delivery.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Why TrustHub Africa?</h2>
+        </div>
+        <div class="why-grid">
+          <article class="info-card">
+            <h3>Verified Sellers Only</h3>
+            <p>Every seller is checked before they start selling.</p>
+          </article>
+          <article class="info-card">
+            <h3>Secure Payments</h3>
+            <p>Your money is protected until you receive your product.</p>
+          </article>
+          <article class="info-card">
+            <h3>Trusted Delivery</h3>
+            <p>Reliable delivery options to get your items safely.</p>
+          </article>
+          <article class="info-card">
+            <h3>Built for Young People</h3>
+            <p>Designed for students, side hustlers, and small businesses.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container">
+        <div class="section-head">
+          <h2>How It Works</h2>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card">
+            <span class="step-number">1</span>
+            <h3>Sign up</h3>
+          </article>
+          <article class="step-card">
+            <span class="step-number">2</span>
+            <h3>Get verified</h3>
+          </article>
+          <article class="step-card">
+            <span class="step-number">3</span>
+            <h3>Buy or sell</h3>
+          </article>
+          <article class="step-card">
+            <span class="step-number">4</span>
+            <h3>Receive or deliver</h3>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Top Categories</h2>
+        </div>
+        <div class="category-grid">
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=900&q=80" alt="Fashion category products" class="category-image" loading="lazy"><h3>Fashion</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=80" alt="Food category products" class="category-image" loading="lazy"><h3>Food</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=900&q=80" alt="Drinks category products" class="category-image" loading="lazy"><h3>Drinks</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" alt="Gadgets category products" class="category-image" loading="lazy"><h3>Gadgets</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=900&q=80" alt="Books category products" class="category-image" loading="lazy"><h3>Books</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80" alt="Beauty category products" class="category-image" loading="lazy"><h3>Beauty</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80" alt="Services category" class="category-image" loading="lazy"><h3>Services</h3></article>
+          <article class="category-card"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80" alt="School items category products" class="category-image" loading="lazy"><h3>School items</h3></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft">
+      <div class="container">
+        <div class="section-head">
+          <h2>Live Marketplace Listings</h2>
+        </div>
+        <p class="product-status" id="home-market-status" role="status" aria-live="polite">Uploaded products from verified sellers will appear here.</p>
+        <div class="product-grid" id="home-market-grid"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Built on Trust</h2>
+        </div>
+        <div class="content-panel trust-panel">
+          <p>Trust is everything on our platform.</p>
+          <p>We verify users, protect payments, and provide support to ensure every transaction is safe and reliable.</p>
+          <div class="trust-mini-grid">
+            <span class="trust-mini">Verified Users</span>
+            <span class="trust-mini">Secure Checkout</span>
+            <span class="trust-mini">Buyer Protection</span>
+            <span class="trust-mini">Trusted Support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-section">
+      <div class="container cta-wrap">
+        <h2>Start buying or selling with confidence today.</h2>
+        <a href="#get-started" class="btn btn-primary">Create Account</a>
+      </div>
+    </section>
+
+    <section class="section support-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Need Help or Have Feedback?</h2>
+        </div>
+        <div class="content-panel support-panel">
+          <p>Chat with us directly or reach out anytime. We're here to support you.</p>
+          <div class="support-actions">
+            <a class="btn btn-primary" href="https://wa.me/2347017509585?text=Hello%20TrustHub%20Africa%2C%20I%20need%20support" target="_blank" rel="noopener">Chat on WhatsApp</a>
+            <a class="btn btn-outline" href="contact.html">Contact Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <h3>TrustHub Africa</h3>
+        <p>Africa's Trusted Marketplace</p>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>About</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="terms.html">Terms &amp; Conditions</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/2347017509585?text=Hello%20TrustHub%20Africa%2C%20I%20need%20support">WhatsApp</a></li>
+          <li><a href="mailto:trusthubafrica@gmail.com">Email</a></li>
+          <li><a href="tel:+2347017509585">Phone</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Social</h4>
+        <ul>
+          <li><a href="social.html">Social Page</a></li>
+          <li><a href="https://www.facebook.com/trusthubafrica/" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a href="https://www.instagram.com/trusthubafrica/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://whatsapp.com/channel/0029Vb7T8lB4dTnJ5JcRPZ3A" target="_blank" rel="noopener">WhatsApp Channel</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="copyright">&copy; 2026 TrustHub Africa. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchInput = document.getElementById("market-search");
+      const categoryFilter = document.getElementById("market-category");
+      const marketGrid = document.getElementById("home-market-grid");
+      const marketStatus = document.getElementById("home-market-status");
+      const allProducts = window.TrustHub ? TrustHub.getMarketplaceProducts() : [];
+      let filteredProducts = allProducts.slice();
+
+      function openProduct(product) {
+        TrustHub.setSelectedProduct(product);
+        window.location.href = "product.html";
+      }
+
+      function renderProducts() {
+        if (!filteredProducts.length) {
+          marketGrid.innerHTML = `
+            <article class="product-card content-panel">
+              <div class="product-card-copy">
+                <h3>No matching products yet</h3>
+                <p>Try a different search or category, or wait for more sellers to upload listings.</p>
+              </div>
+              <div class="product-card-actions">
+                <a href="buyer-signup.html" class="btn btn-primary">Start Shopping</a>
+                <a href="seller-signup.html" class="btn btn-outline">Become a Seller</a>
+              </div>
+            </article>
+          `;
+          marketStatus.textContent = allProducts.length
+            ? "No products match your current search."
+            : "No live products yet. Listings will appear as soon as sellers upload them.";
+          return;
+        }
+
+        const visibleProducts = filteredProducts.slice(0, 6);
+        marketStatus.textContent = filteredProducts.length > visibleProducts.length
+          ? `Showing ${visibleProducts.length} of ${filteredProducts.length} live products from verified sellers.`
+          : `Showing ${filteredProducts.length} live product${filteredProducts.length === 1 ? "" : "s"} from verified sellers.`;
+        marketGrid.innerHTML = visibleProducts.map((product) => `
+          <article class="product-card">
+            <img src="${TrustHub.resolveImage(product.image)}" alt="${product.name}" class="product-image" loading="lazy">
+            <div class="product-card-copy">
+              <h3>${product.name}</h3>
+              <p class="price">${TrustHub.formatCurrency(product.price)}</p>
+              <p class="meta">Seller: ${product.sellerName}</p>
+              <p class="meta">${product.category || "Marketplace"} • ${product.isPro ? "Pro Seller" : "Verified Seller"}</p>
+              <p class="rating">${Number(product.rating || 4.8).toFixed(1)} <span>&#9733;</span></p>
+              <span class="trust-pill">${product.isPro ? "Pro Seller" : "Verified"}</span>
+            </div>
+            <div class="product-card-actions">
+              <button class="btn btn-outline" type="button" data-home-action="view" data-product-id="${product.id}" data-seller-id="${product.sellerId}" aria-label="View details for ${product.name}">View Details</button>
+              <button class="btn btn-primary" type="button" data-home-action="cart" data-product-id="${product.id}" data-seller-id="${product.sellerId}" aria-label="Add ${product.name} to cart">Add to Cart</button>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function applyFilters() {
+        const query = TrustHub.normalize(searchInput.value);
+        const category = TrustHub.normalize(categoryFilter.value);
+
+        filteredProducts = allProducts.filter((product) => {
+          const haystack = TrustHub.normalize(`${product.name} ${product.sellerName} ${product.category} ${product.description || ""}`);
+          const matchesQuery = !query || haystack.includes(query);
+          const matchesCategory = !category || TrustHub.normalize(product.category) === category;
+          return matchesQuery && matchesCategory;
+        });
+
+        renderProducts();
+      }
+
+      marketGrid.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+
+        const action = target.getAttribute("data-home-action");
+        const productId = target.getAttribute("data-product-id");
+        const sellerId = target.getAttribute("data-seller-id");
+        if (!action || !productId) {
+          return;
+        }
+
+        const product = allProducts.find((item) => item.id === productId && item.sellerId === sellerId);
+        if (!product) {
+          return;
+        }
+
+        if (action === "view") {
+          openProduct(product);
+        }
+
+        if (action === "cart") {
+          TrustHub.addCartItem(product);
+          TrustHub.showToast(`${product.name} added to cart.`);
+          target.textContent = "Added";
+        }
+      });
+
+      searchInput.addEventListener("input", applyFilters);
+      categoryFilter.addEventListener("change", applyFilters);
+      renderProducts();
+    });
+  </script>
+</body>
+</html>

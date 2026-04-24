@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Redirect | TrustHub Africa</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-main">
+    <div class="auth-card">
+      <div>
+        <p class="eyebrow">TrustHub Africa</p>
+        <h1>Opening your account</h1>
+        <p id="dashboard-message">We are checking your account and taking you to the right dashboard.</p>
+      </div>
+      <div style="display:grid;gap:0.85rem;">
+        <a href="buyer-dashboard.html" class="btn btn-primary">Go to Buyer Dashboard</a>
+        <a href="seller-dashboard.html" class="btn btn-outline">Go to Seller Dashboard</a>
+        <a href="admin-dashboard.html" class="btn btn-outline">Go to Admin Dashboard</a>
+        <a href="login.html" class="btn btn-ghost">Back to Login</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      function safeParse(value, fallback) {
+        try {
+          return value ? JSON.parse(value) : fallback;
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      const currentUser = safeParse(localStorage.getItem("trusthub-current-user"), {});
+      const message = document.getElementById("dashboard-message");
+
+      if (currentUser.role === "buyer") {
+        message.textContent = "Buyer account found. Redirecting you to your dashboard.";
+        window.location.replace("buyer-dashboard.html");
+        return;
+      }
+
+      if (currentUser.role === "seller") {
+        message.textContent = "Seller account found. Redirecting you to your dashboard.";
+        window.location.replace("seller-dashboard.html");
+        return;
+      }
+
+      if (currentUser.role === "admin") {
+        message.textContent = "Admin account found. Redirecting you to the control panel.";
+        window.location.replace("admin-dashboard.html");
+        return;
+      }
+
+      message.textContent = "No active account was found. Please log in or create an account to continue.";
+    });
+  </script>
+</body>
+</html>

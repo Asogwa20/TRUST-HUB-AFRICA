@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard | TrustHub Africa</title>
+  <meta name="description" content="Seller Dashboard for TrustHub Africa.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0B1F3A;
+      --secondary: #16A34A;
+      --background: #FFFFFF;
+      --accent: #F59E0B;
+      --text: #1F2937;
+      --surface: #F8FAFC;
+      --border: #E5E7EB;
+      --muted: #6B7280;
+      --shadow: 0 10px 28px rgba(11, 31, 58, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --trans: 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .dashboard-shell {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+      background: #F3F6FA;
+    }
+
+    .sidebar {
+      background: var(--background);
+      border-right: 1px solid var(--border);
+      padding: 1.4rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: grid;
+      gap: 0.35rem;
+      padding: 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: #FCFDFE;
+      box-shadow: 0 6px 18px rgba(11, 31, 58, 0.05);
+      margin-bottom: 1rem;
+    }
+
+    .brand h2 {
+      font-size: 1rem;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .brand p {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .sidebar-nav {
+      display: grid;
+      gap: 0.45rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .sidebar-link {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.68rem 0.82rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: background var(--trans), border-color var(--trans), transform var(--trans);
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link:focus-visible {
+      background: #F7FBF8;
+      border-color: #CFE9D9;
+      transform: translateX(2px);
+      outline: none;
+    }
+
+    .sidebar-link.active {
+      color: #FFFFFF;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .sidebar-actions {
+      display: grid;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.86rem;
+      padding: 0.7rem 0.9rem;
+      cursor: pointer;
+      transition: transform var(--trans), box-shadow var(--trans), opacity var(--trans), background var(--trans);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--secondary);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: #FFFFFF;
+      box-shadow: 0 8px 18px rgba(22, 163, 74, 0.2);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 12px 20px rgba(22, 163, 74, 0.25);
+    }
+
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--primary);
+      border: 1px solid #C9D3E0;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 16px rgba(11, 31, 58, 0.08);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #1A1201;
+      box-shadow: 0 8px 18px rgba(245, 158, 11, 0.28);
+    }
+
+    .sidebar-note {
+      border: 1px solid #E6EDF6;
+      border-radius: var(--radius-md);
+      background: #FBFDFF;
+      padding: 0.85rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .main-area {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+    }
+
+    .top-header {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .header-copy h1 {
+      font-size: clamp(1.18rem, 2.2vw, 1.55rem);
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .header-copy p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .shop-chip {
+      display: inline-block;
+      margin-top: 0.45rem;
+      padding: 0.33rem 0.64rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: #E9F7EF;
+      color: #0F7A36;
+      border: 1px solid #C6E9D3;
+    }
+
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      border-radius: 999px;
+      padding: 0.45rem 0.8rem;
+      min-width: 290px;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .search:focus-within {
+      border-color: #9BC8AF;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+    }
+
+    .search input {
+      border: none;
+      width: 100%;
+      background: transparent;
+      font-family: inherit;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .search input:focus {
+      outline: none;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+      color: var(--primary);
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-btn:hover {
+      border-color: #BDD8C9;
+      box-shadow: 0 8px 16px rgba(11, 31, 58, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .mobile-nav {
+      display: none;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: #FFFFFF;
+      scrollbar-width: none;
+    }
+
+    .mobile-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mobile-nav a {
+      flex: 0 0 auto;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+      border: 1px solid #D6DEE8;
+      border-radius: 999px;
+      padding: 0.46rem 0.75rem;
+      transition: background var(--trans), color var(--trans), border-color var(--trans);
+      white-space: nowrap;
+    }
+
+    .mobile-nav a:hover,
+    .mobile-nav a:focus-visible {
+      background: #EFF7F2;
+      border-color: #BFDCCB;
+      color: #0D6630;
+      outline: none;
+    }
+
+    .content {
+      padding: 1rem 1.15rem 1.2rem;
+      display: grid;
+      gap: 0.95rem;
+    }
+
+    .section-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+      transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+    }
+
+    .section-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(11, 31, 58, 0.1);
+      border-color: #D3DEEA;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-head h2 {
+      font-size: 1rem;
+      color: var(--primary);
+      line-height: 1.25;
+    }
+
+    .section-head p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .stat {
+      border: 1px solid #E6ECF3;
+      border-radius: var(--radius-md);
+      background: #FFFFFF;
+      padding: 0.78rem;
+      transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+    }
+
+    .stat:hover {
+      transform: translateY(-2px);
+      border-color: #BFD0E2;
+      box-shadow: 0 9px 20px rgba(11, 31, 58, 0.08);
+    }
+
+    .stat .label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+      display: block;
+      font-weight: 600;
+    }
+
+    .stat .value {
+      font-size: 1.1rem;
+      color: var(--primary);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .stat .meta {
+      margin-top: 0.28rem;
+      font-size: 0.75rem;
+      color: #0E7D35;
+      font-weight: 600;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.58rem;
+    }
+
+    .overview-item {
+      border: 1px solid #E5EAF1;
+      border-radius: var(--radius-sm);
+      padding: 0.62rem;
+      background: #FCFDFE;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .overview-item:hover {
+      border-color: #BCD0E2;
+      box-shadow: 0 6px 14px rgba(11, 31, 58, 0.06);
+    }
+
+    .overview-item .k {
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .overview-item .v {
+      font-size: 0.86rem;
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.23rem 0.48rem;
+      border-radius: 999px;
+      border: 1px solid #CDE8D8;
+      background: #EDF9F2;
+      color: #0F7A36;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 0.95rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.62rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 0.33rem;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 0.79rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid #D8DFE8;
+      border-radius: var(--radius-sm);
+      padding: 0.62rem 0.68rem;
+      font-size: 0.84rem;
+      color: var(--text);
+      background: #FFFFFF;
+      font-family: inherit;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .field textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #9FCFB1;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+      outline: none;
+    }
+
+    .upload-placeholder {
+      border: 1px dashed #CBD5E1;
+      border-radius: var(--radius-sm);
+      background: #FBFDFF;
+      padding: 0.8rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: border-color var(--trans), background var(--trans);
+    }
+
+    .upload-placeholder:hover {
+      border-color: #9EC2B0;
+      background: #F6FBF8;
+    }
+
+    .upload-placeholder input {
+      margin-top: 0.45rem;
+      font-size: 0.74rem;
+    }
+
+    .table-wrap {
+      border: 1px solid #E4E9F0;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      background: #FFFFFF;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.65rem 0.7rem;
+      border-bottom: 1px solid #ECF1F6;
+      font-size: 0.82rem;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.76rem;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      background: #F8FAFD;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .product-row {
+      transition: background var(--trans);
+    }
+
+    .product-row:hover {
+      background: #F8FCF9;
+    }
+
+    .product-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .product-thumb {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid #DCE3EC;
+      background: #F5F7FA;
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 0.42rem;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      border: 1px solid #CFD8E3;
+      background: #FFFFFF;
+      color: var(--primary);
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 0.34rem 0.56rem;
+      cursor: pointer;
+      transition: border-color var(--trans), box-shadow var(--trans), transform var(--trans);
+    }
+
+    .mini-btn:hover {
+      border-color: #90A7C0;
+      box-shadow: 0 6px 12px rgba(11, 31, 58, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .mini-btn.warn {
+      border-color: #E8D4A9;
+      color: #8A5A00;
+      background: #FFF9ED;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.58rem;
+    }
+
+    .status-box {
+      border: 1px solid #E5EAF1;
+      border-radius: var(--radius-md);
+      background: #FCFDFE;
+      padding: 0.72rem;
+      transition: transform var(--trans), border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .status-box:hover {
+      transform: translateY(-2px);
+      border-color: #BDD0E2;
+      box-shadow: 0 8px 18px rgba(11, 31, 58, 0.08);
+    }
+
+    .status-box h3 {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.32rem;
+      text-transform: capitalize;
+    }
+
+    .status-box p {
+      font-size: 1.05rem;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .earnings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.72rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .earnings-card {
+      border: 1px solid #DAE4EE;
+      border-radius: var(--radius-md);
+      background: #FFFFFF;
+      padding: 0.8rem;
+      transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+    }
+
+    .earnings-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 9px 18px rgba(11, 31, 58, 0.08);
+      border-color: #BFCFE0;
+    }
+
+    .earnings-card span {
+      display: block;
+      font-size: 0.77rem;
+      color: var(--muted);
+      margin-bottom: 0.24rem;
+      font-weight: 600;
+    }
+
+    .earnings-card strong {
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.58rem;
+    }
+
+    .trust-item {
+      border: 1px solid #E4EAF2;
+      border-radius: var(--radius-sm);
+      background: #FCFDFE;
+      padding: 0.72rem;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .trust-item:hover {
+      border-color: #C0D0E2;
+      box-shadow: 0 7px 15px rgba(11, 31, 58, 0.07);
+    }
+
+    .trust-item .t-label {
+      font-size: 0.76rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    .trust-item .t-value {
+      font-size: 1rem;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .stars {
+      letter-spacing: 0.03em;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .assistant-box {
+      border: 1px solid #DCE4EE;
+      border-radius: var(--radius-md);
+      background: #FCFDFE;
+      padding: 0.82rem;
+      display: grid;
+      gap: 0.64rem;
+    }
+
+    .assistant-suggestions {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .assistant-chip {
+      border: 1px solid #CFD8E3;
+      border-radius: 999px;
+      background: #FFFFFF;
+      padding: 0.31rem 0.56rem;
+      font-size: 0.74rem;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color var(--trans), box-shadow var(--trans);
+    }
+
+    .assistant-chip:hover {
+      border-color: #A6BCCF;
+      box-shadow: 0 5px 12px rgba(11, 31, 58, 0.07);
+    }
+
+    .assistant-output {
+      border: 1px solid #E1E7F0;
+      border-radius: var(--radius-sm);
+      background: #FFFFFF;
+      padding: 0.65rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      min-height: 74px;
+      line-height: 1.5;
+    }
+
+    .pro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.72rem;
+    }
+
+    .benefits,
+    .highlights {
+      border: 1px solid #E2E8F0;
+      border-radius: var(--radius-md);
+      background: #FFFFFF;
+      padding: 0.75rem;
+      font-size: 0.82rem;
+    }
+
+    .benefits h3,
+    .highlights h3 {
+      font-size: 0.88rem;
+      color: var(--primary);
+      margin-bottom: 0.45rem;
+    }
+
+    .benefits ul,
+    .highlights ul {
+      list-style: none;
+      display: grid;
+      gap: 0.38rem;
+      color: var(--text);
+    }
+
+    .benefits li,
+    .highlights li {
+      display: flex;
+      gap: 0.45rem;
+      align-items: flex-start;
+      line-height: 1.4;
+    }
+
+    .benefits li::before,
+    .highlights li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 0.34rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--secondary);
+    }
+
+    .footer {
+      text-align: center;
+      border-top: 1px solid var(--border);
+      background: #FFFFFF;
+      color: #6B7280;
+      padding: 0.82rem 1rem;
+      font-size: 0.78rem;
+    }
+
+    .footer strong {
+      color: var(--primary);
+    }
+
+    @media (max-width: 1200px) {
+      .stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .overview-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .status-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .trust-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .mobile-nav {
+        display: flex;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search {
+        min-width: 220px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .top-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.9rem;
+      }
+
+      .header-tools {
+        width: 100%;
+      }
+
+      .search {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .content {
+        padding: 0.85rem;
+        gap: 0.85rem;
+      }
+
+      .section-card {
+        border-radius: 14px;
+        padding: 0.85rem;
+      }
+
+      .stats-grid,
+      .overview-grid,
+      .status-grid,
+      .earnings-grid,
+      .pro-grid,
+      .trust-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+      }
+
+      th,
+      td {
+        padding: 0.58rem;
+      }
+    }
+  </style>
+</head>
+<body data-protected="true" data-role="seller">
+  <div class="dashboard-shell">
+    <aside class="sidebar" aria-label="Seller navigation">
+      <div class="brand">
+        <h2>TrustHub Africa</h2>
+        <p>Africa's Trusted Marketplace</p>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="sidebar-link active" href="#seller-dashboard">Seller Dashboard</a>
+        <a class="sidebar-link" href="#shop-overview">Shop Overview</a>
+        <a class="sidebar-link" href="#add-product">Add Product</a>
+        <a class="sidebar-link" href="#products-list">Products</a>
+        <a class="sidebar-link" href="#orders">Orders</a>
+        <a class="sidebar-link" href="#earnings">Earnings</a>
+        <a class="sidebar-link" href="#trust-score">Trust Score</a>
+        <a class="sidebar-link" href="#ai-assistant">AI Assistant</a>
+        <a class="sidebar-link" href="#pro">Pro</a>
+      </nav>
+
+      <div class="sidebar-actions">
+        <button class="btn btn-primary" id="sidebar-add-product">Add Product</button>
+        <button class="btn btn-outline" onclick="document.getElementById('orders').scrollIntoView({ behavior: 'smooth' });">View Orders</button>
+        <button class="btn btn-outline" onclick="document.getElementById('earnings').scrollIntoView({ behavior: 'smooth' });">View Earnings</button>
+        <button class="btn btn-outline" onclick="document.getElementById('shop-overview').scrollIntoView({ behavior: 'smooth' });">Manage Shop</button>
+        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">Upgrade to Pro</button>
+      </div>
+
+      <p class="sidebar-note">Secure seller tools built for serious marketplace operations. Keep your catalog updated and deliver consistently to protect your trust score.</p>
+    </aside>
+
+    <div class="main-area" id="seller-dashboard">
+      <header class="top-header">
+        <div class="header-copy">
+          <h1>Seller Dashboard</h1>
+          <p>Welcome back, Seller</p>
+          <p>Manage your shop, products, orders, and earnings in one place.</p>
+          <span class="shop-chip" id="header-shop-name">Shop: TrustHub Seller Store</span>
+        </div>
+
+        <div class="header-tools">
+          <label class="search" aria-label="Search dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M20 20L17 17"></path>
+            </svg>
+            <input type="search" id="dashboard-search" placeholder="Search products, orders, payouts">
+          </label>
+
+          <button class="icon-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path>
+              <path d="M10 20a2 2 0 0 0 4 0"></path>
+            </svg>
+          </button>
+
+          <button class="icon-btn" aria-label="Profile" type="button" onclick="window.location.href='profile.html'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c1.5-3.5 4.2-5 8-5s6.5 1.5 8 5"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <nav class="mobile-nav" aria-label="Mobile seller menu">
+        <a href="#seller-dashboard">Dashboard</a>
+        <a href="#shop-overview">Shop</a>
+        <a href="#add-product">Add Product</a>
+        <a href="#products-list">Products</a>
+        <a href="#orders">Orders</a>
+        <a href="#earnings">Earnings</a>
+        <a href="#trust-score">Trust Score</a>
+        <a href="#ai-assistant">AI</a>
+        <a href="#pro">Pro</a>
+      </nav>
+
+      <main class="content">
+        <section class="section-card" aria-label="Quick Stats">
+          <div class="section-head">
+            <div>
+              <h2>Quick Stats</h2>
+              <p>Real-time view of your store performance.</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat">
+              <span class="label">Total Sales</span>
+              <strong class="value" id="stat-total-sales">NGN 0</strong>
+              <span class="meta" id="stat-sales-meta">Updated now</span>
+            </article>
+
+            <article class="stat">
+              <span class="label">Pending Orders</span>
+              <strong class="value" id="stat-pending-orders">0</strong>
+              <span class="meta">Needs attention</span>
+            </article>
+
+            <article class="stat">
+              <span class="label">Products Listed</span>
+              <strong class="value" id="stat-products-listed">0</strong>
+              <span class="meta">Active inventory</span>
+            </article>
+
+            <article class="stat">
+              <span class="label">Earnings</span>
+              <strong class="value" id="stat-earnings">NGN 0</strong>
+              <span class="meta">This month</span>
+            </article>
+
+            <article class="stat">
+              <span class="label">Trust Score</span>
+              <strong class="value" id="stat-trust-score">0.0/5</strong>
+              <span class="meta">Marketplace confidence</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-card" id="shop-overview" aria-label="Shop Overview">
+          <div class="section-head">
+            <div>
+              <h2>Shop Overview</h2>
+              <p>Business profile and verification details.</p>
+            </div>
+            <button class="btn btn-outline" onclick="document.getElementById('shop-overview').scrollIntoView({ behavior: 'smooth' });">Manage Shop</button>
+          </div>
+
+          <div class="overview-grid">
+            <article class="overview-item">
+              <p class="k">Shop Name</p>
+              <p class="v" id="overview-shop-name">TrustHub Seller Store</p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">Username</p>
+              <p class="v" id="overview-username">@seller</p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">Verification Status</p>
+              <p class="v"><span class="status-pill" id="overview-verification">Verification Submitted</span></p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">Location</p>
+              <p class="v" id="overview-location">Enugu City</p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">State</p>
+              <p class="v" id="overview-state">Enugu</p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">Country</p>
+              <p class="v" id="overview-country">Nigeria</p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">Age</p>
+              <p class="v" id="overview-age">Not provided</p>
+            </article>
+
+            <article class="overview-item">
+              <p class="k">Seller Rating</p>
+              <p class="v" id="overview-rating">4.8/5</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-grid">
+          <section class="section-card" id="add-product" aria-label="Add Product">
+            <div class="section-head">
+              <div>
+                <h2>Add Product</h2>
+                <p>Create and publish product listings quickly.</p>
+              </div>
+              <button class="btn btn-primary" id="add-product-btn" type="button">Add Product</button>
+            </div>
+
+            <form id="product-form" class="form-grid" novalidate>
+              <div class="field">
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name" required placeholder="Enter product name">
+              </div>
+
+              <div class="field">
+                <label for="product-price">Price (NGN)</label>
+                <input type="number" id="product-price" min="1" required placeholder="15000">
+              </div>
+
+              <div class="field full">
+                <label for="product-description">Description</label>
+                <textarea id="product-description" required placeholder="Write a clear product description."></textarea>
+              </div>
+
+              <div class="field">
+                <label for="product-category">Category</label>
+                <select id="product-category" required>
+                  <option value="">Select category</option>
+                  <option>Fashion</option>
+                  <option>Electronics</option>
+                  <option>Home & Living</option>
+                  <option>Books</option>
+                  <option>Beauty</option>
+                  <option>Food</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="product-stock">Stock</label>
+                <input type="number" id="product-stock" min="0" required placeholder="40">
+              </div>
+
+              <div class="field full">
+                <label>Image Upload</label>
+                <div class="upload-placeholder">
+                  Drop product image here or browse
+                  <input type="file" id="product-image" accept="image/*">
+                </div>
+              </div>
+
+              <div class="field full" style="display:flex; justify-content:flex-end;">
+                <button class="btn btn-primary" type="submit">Publish</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="section-card" id="products-list" aria-label="Products List">
+            <div class="section-head">
+              <div>
+                <h2>Products List</h2>
+                <p>Track inventory and listing status.</p>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section class="section-card" id="orders" aria-label="Orders">
+          <div class="section-head">
+            <div>
+              <h2>Orders Section</h2>
+              <p>Current order pipeline.</p>
+            </div>
+            <button class="btn btn-outline" onclick="document.getElementById('orders').scrollIntoView({ behavior: 'smooth' });">View Orders</button>
+          </div>
+
+          <div class="status-grid">
+            <article class="status-box">
+              <h3>pending</h3>
+              <p id="orders-pending">0</p>
+            </article>
+
+            <article class="status-box">
+              <h3>accepted</h3>
+              <p id="orders-accepted">0</p>
+            </article>
+
+            <article class="status-box">
+              <h3>in transit</h3>
+              <p id="orders-in-transit">0</p>
+            </article>
+
+            <article class="status-box">
+              <h3>delivered</h3>
+              <p id="orders-delivered">0</p>
+            </article>
+
+            <article class="status-box">
+              <h3>completed</h3>
+              <p id="orders-completed">0</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-card" id="earnings" aria-label="Earnings">
+          <div class="section-head">
+            <div>
+              <h2>Earnings Section</h2>
+              <p>Clear view of balances and payouts.</p>
+            </div>
+            <button class="btn btn-outline" onclick="document.getElementById('earnings').scrollIntoView({ behavior: 'smooth' });">View Earnings</button>
+          </div>
+
+          <div class="earnings-grid">
+            <article class="earnings-card">
+              <span>Earnings Card</span>
+              <strong id="earnings-total">NGN 0</strong>
+            </article>
+
+            <article class="earnings-card">
+              <span>Available Balance</span>
+              <strong id="earnings-available">NGN 0</strong>
+            </article>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Payout Date</th>
+                  <th>Reference</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="payout-history-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section-card" id="trust-score" aria-label="Trust Score">
+          <div class="section-head">
+            <div>
+              <h2>Trust Score Section</h2>
+              <p>Signals buyers use to trust your shop.</p>
+            </div>
+          </div>
+
+          <div class="trust-grid">
+            <article class="trust-item">
+              <span class="t-label">Star Rating</span>
+              <p class="t-value"><span class="stars" id="trust-stars">★★★★★</span></p>
+            </article>
+
+            <article class="trust-item">
+              <span class="t-label">Completed Orders</span>
+              <p class="t-value" id="trust-completed">0</p>
+            </article>
+
+            <article class="trust-item">
+              <span class="t-label">Response Rate</span>
+              <p class="t-value" id="trust-response-rate">0%</p>
+            </article>
+
+            <article class="trust-item">
+              <span class="t-label">Delivery Success</span>
+              <p class="t-value" id="trust-delivery-success">0%</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-card" id="ai-assistant" aria-label="AI Assistant">
+          <div class="section-head">
+            <div>
+              <h2>AI Assistant Section</h2>
+              <p>Small help box for faster seller decisions.</p>
+            </div>
+          </div>
+
+          <div class="assistant-box">
+            <div class="assistant-suggestions">
+              <button class="assistant-chip" type="button" data-assistant="description">Product descriptions</button>
+              <button class="assistant-chip" type="button" data-assistant="pricing">Pricing help</button>
+              <button class="assistant-chip" type="button" data-assistant="sales">Sales tips</button>
+              <button class="assistant-chip" type="button" data-assistant="reply">Reply helper</button>
+            </div>
+
+            <div class="field full">
+              <label for="assistant-input">Ask for help</label>
+              <input id="assistant-input" type="text" placeholder="Example: Help me improve my product caption.">
+            </div>
+
+            <div class="assistant-suggestions">
+              <button class="btn btn-primary" id="assistant-generate-btn" type="button">Generate Advice</button>
+              <button class="btn btn-outline" id="assistant-clear-btn" type="button">Clear</button>
+            </div>
+
+            <div class="assistant-output" id="assistant-output">Use the AI Assistant to improve listing quality, price smartly, and reply quickly to customers.</div>
+          </div>
+        </section>
+
+        <section class="section-card" id="pro" aria-label="Pro Section">
+          <div class="section-head">
+            <div>
+              <h2>Pro Section</h2>
+              <p>Upgrade card with benefits and highlights.</p>
+            </div>
+            <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
+              <span class="status-pill" id="pro-status-pill">Standard Plan</span>
+              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">Upgrade to Pro</button>
+            </div>
+          </div>
+
+          <div class="pro-grid">
+            <article class="benefits">
+              <h3>Benefits List</h3>
+              <ul>
+                <li>Priority listing visibility across high-intent buyers.</li>
+                <li>Lower payout processing time for completed orders.</li>
+                <li>Advanced product analytics and category trends.</li>
+                <li>Dedicated support for disputes and logistics issues.</li>
+              </ul>
+            </article>
+
+            <article class="highlights">
+              <h3>Feature Highlights</h3>
+              <ul>
+                <li>Automated pricing guidance based on market activity.</li>
+                <li>Bulk product tools for faster catalog updates.</li>
+                <li>Stronger buyer trust badge and profile priority.</li>
+                <li>Smart reply templates for faster customer response.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <strong>TrustHub Africa</strong> | Africa's Trusted Marketplace
+      </footer>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const currency = new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        maximumFractionDigits: 0
+      });
+
+      function parseStorage(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback;
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function setStorage(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      function safeString(value) {
+        return typeof value === "string" ? value.trim() : "";
+      }
+
+      function normalize(value) {
+        return safeString(value).toLowerCase();
+      }
+
+      function resolveImage(image) {
+        const value = safeString(image);
+        if (!value || value.startsWith("blob:")) {
+          return "logo.png";
+        }
+        return value;
+      }
+
+      function readImageFile(file) {
+        return new Promise((resolve) => {
+          if (!file) {
+            resolve("logo.png");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            resolve(typeof reader.result === "string" ? reader.result : "logo.png");
+          };
+          reader.onerror = () => resolve("logo.png");
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const currentUser = parseStorage("trusthub-current-user", {});
+      if (!currentUser || currentUser.role !== "seller") {
+        if (currentUser && currentUser.role === "buyer") {
+          window.location.href = "buyer-dashboard.html";
+          return;
+        }
+        window.location.href = "login.html";
+        return;
+      }
+
+      const allUsers = parseStorage("trusthub-users", []);
+      const matchedSellerIndex = allUsers.findIndex((user) => {
+        const emailMatch = currentUser.email && user.email && normalize(currentUser.email) === normalize(user.email);
+        const usernameMatch = currentUser.username && user.username && normalize(currentUser.username) === normalize(user.username);
+        return emailMatch || usernameMatch;
+      });
+
+      const sellerProfile = matchedSellerIndex >= 0
+        ? { ...allUsers[matchedSellerIndex] }
+        : { ...currentUser, role: "seller" };
+      const sellerStorageId = normalize(sellerProfile.username || sellerProfile.email || "seller");
+      const productStorageKey = `trusthub-seller-products-${sellerStorageId}`;
+      const proStorageKey = `trusthub-seller-pro-${sellerStorageId}`;
+
+      const demoNames = [
+        "premium ankara tote bag",
+        "bluetooth earbuds s2",
+        "organic shea body butter",
+        "portable study lamp"
+      ];
+
+      function isDemoProduct(product) {
+        const name = normalize(product && product.name);
+        const id = normalize(product && product.id);
+        return demoNames.includes(name) || /^p-00[1-4]$/.test(id);
+      }
+
+      function orderBelongsToSeller(order) {
+        const markers = [
+          normalize(order && order.seller),
+          normalize(order && order.sellerEmail),
+          normalize(order && order.sellerUsername)
+        ].filter(Boolean);
+
+        if (!markers.length) {
+          return false;
+        }
+
+        return markers.includes(normalize(sellerProfile.shopName || sellerProfile.businessName || sellerProfile.school || sellerProfile.fullName))
+          || markers.includes(normalize(sellerProfile.email))
+          || markers.includes(normalize(sellerProfile.username));
+      }
+
+      let isProSeller = Boolean(parseStorage(proStorageKey, sellerProfile.isPro || false));
+      let products = parseStorage(productStorageKey, [])
+        .filter((product) => product && !isDemoProduct(product))
+        .map((product) => ({ ...product, image: resolveImage(product.image) }));
+      let orders = parseStorage("trusthub-orders", []).filter(orderBelongsToSeller);
+      let payoutHistory = parseStorage(`trusthub-seller-payouts-${sellerStorageId}`, parseStorage("trusthub-seller-payouts", []));
+
+      const overviewShopName = document.getElementById("overview-shop-name");
+      const overviewUsername = document.getElementById("overview-username");
+      const overviewVerification = document.getElementById("overview-verification");
+      const overviewLocation = document.getElementById("overview-location");
+      const overviewState = document.getElementById("overview-state");
+      const overviewCountry = document.getElementById("overview-country");
+      const overviewAge = document.getElementById("overview-age");
+      const overviewRating = document.getElementById("overview-rating");
+      const headerShopName = document.getElementById("header-shop-name");
+
+      const statTotalSales = document.getElementById("stat-total-sales");
+      const statPendingOrders = document.getElementById("stat-pending-orders");
+      const statProductsListed = document.getElementById("stat-products-listed");
+      const statEarnings = document.getElementById("stat-earnings");
+      const statTrustScore = document.getElementById("stat-trust-score");
+      const statSalesMeta = document.getElementById("stat-sales-meta");
+
+      const ordersPending = document.getElementById("orders-pending");
+      const ordersAccepted = document.getElementById("orders-accepted");
+      const ordersInTransit = document.getElementById("orders-in-transit");
+      const ordersDelivered = document.getElementById("orders-delivered");
+      const ordersCompleted = document.getElementById("orders-completed");
+
+      const earningsTotal = document.getElementById("earnings-total");
+      const earningsAvailable = document.getElementById("earnings-available");
+      const payoutHistoryBody = document.getElementById("payout-history-body");
+
+      const trustStars = document.getElementById("trust-stars");
+      const trustCompleted = document.getElementById("trust-completed");
+      const trustResponseRate = document.getElementById("trust-response-rate");
+      const trustDeliverySuccess = document.getElementById("trust-delivery-success");
+
+      const productsTableBody = document.getElementById("products-table-body");
+      const productForm = document.getElementById("product-form");
+      const productName = document.getElementById("product-name");
+      const productPrice = document.getElementById("product-price");
+      const productDescription = document.getElementById("product-description");
+      const productImage = document.getElementById("product-image");
+      const productCategory = document.getElementById("product-category");
+      const productStock = document.getElementById("product-stock");
+      const addProductButton = document.getElementById("add-product-btn");
+      const sidebarAddProductButton = document.getElementById("sidebar-add-product");
+      const sidebarUpgradeButton = document.getElementById("sidebar-upgrade-pro");
+      const upgradeProButton = document.getElementById("upgrade-pro-btn");
+      const proStatusPill = document.getElementById("pro-status-pill");
+
+      const searchInput = document.getElementById("dashboard-search");
+      const assistantInput = document.getElementById("assistant-input");
+      const assistantOutput = document.getElementById("assistant-output");
+      const assistantGenerateButton = document.getElementById("assistant-generate-btn");
+      const assistantClearButton = document.getElementById("assistant-clear-btn");
+
+      function getSellerName() {
+        return sellerProfile.shopName || sellerProfile.businessName || sellerProfile.school || sellerProfile.fullName || "Seller Shop";
+      }
+
+      function getSellerUsername() {
+        return sellerProfile.username ? `@${sellerProfile.username}` : "@seller";
+      }
+
+      function getVerificationStatus() {
+        if (sellerProfile.verificationStatus) {
+          return sellerProfile.verificationStatus;
+        }
+        return sellerProfile.verificationDetails ? "Verification Submitted" : "Pending Verification";
+      }
+
+      function getRating() {
+        const base = Number(sellerProfile.rating || (isProSeller ? 5 : 4.8));
+        return Number.isFinite(base) ? Math.max(0, Math.min(5, base)) : 4.8;
+      }
+
+      function syncSellerProfile() {
+        const nextProfile = {
+          ...sellerProfile,
+          role: "seller",
+          isPro: isProSeller,
+          verificationStatus: getVerificationStatus(),
+          rating: getRating()
+        };
+
+        if (matchedSellerIndex >= 0) {
+          allUsers[matchedSellerIndex] = {
+            ...allUsers[matchedSellerIndex],
+            ...nextProfile
+          };
+          setStorage("trusthub-users", allUsers);
+        }
+
+        setStorage("trusthub-current-user", {
+          ...currentUser,
+          ...nextProfile
+        });
+      }
+
+      function renderProfile() {
+        const shopName = getSellerName();
+        const ageValue = sellerProfile.age ? `${sellerProfile.age} years` : "Not provided";
+        const verificationText = isProSeller
+          ? `${getVerificationStatus()} | Pro Seller`
+          : getVerificationStatus();
+
+        overviewShopName.textContent = shopName;
+        headerShopName.textContent = `Shop: ${shopName}`;
+        overviewUsername.textContent = getSellerUsername();
+        overviewVerification.textContent = verificationText;
+        overviewLocation.textContent = sellerProfile.location || "Enugu";
+        overviewState.textContent = sellerProfile.state || "Enugu";
+        overviewCountry.textContent = sellerProfile.country || "Nigeria";
+        overviewAge.textContent = ageValue;
+        overviewRating.textContent = `${getRating().toFixed(1)}/5`;
+      }
+
+      function saveProducts() {
+        products = products
+          .filter((product) => product && !isDemoProduct(product))
+          .map((product) => ({ ...product, image: resolveImage(product.image) }));
+        setStorage(productStorageKey, products);
+      }
+
+      function renderProducts() {
+        if (!products.length) {
+          productsTableBody.innerHTML = `
+            <tr class="product-row">
+              <td colspan="5" style="padding:1.1rem 0.4rem;text-align:center;color:#6B7280;">
+                No products uploaded yet. Add your first listing to appear in the marketplace.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        productsTableBody.innerHTML = products.map((product) => `
+          <tr class="product-row">
+            <td>
+              <img src="${resolveImage(product.image)}" alt="${product.name}" class="product-thumb">
+            </td>
+            <td>
+              <div class="product-cell">
+                <div>
+                  <strong>${product.name}</strong><br>
+                  <span style="font-size:0.74rem;color:#6B7280;">${product.category || "Others"}</span>
+                </div>
+              </div>
+            </td>
+            <td>${currency.format(product.price)}</td>
+            <td>${product.stock}</td>
+            <td>
+              <div class="inline-actions">
+                <button class="mini-btn" type="button" data-action="edit" data-id="${product.id}">Edit</button>
+                <button class="mini-btn warn" type="button" data-action="delete" data-id="${product.id}">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      }
+
+      function renderPayoutHistory() {
+        if (!payoutHistory.length) {
+          payoutHistoryBody.innerHTML = `
+            <tr>
+              <td colspan="4" style="padding:1rem 0.5rem;text-align:center;color:#6B7280;">
+                No payout records yet. Completed paid orders will appear here.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        payoutHistoryBody.innerHTML = payoutHistory.map((payout) => {
+          const formattedDate = new Date(payout.date).toLocaleDateString("en-NG", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+          });
+
+          return `
+            <tr>
+              <td>${formattedDate}</td>
+              <td>${payout.reference || "-"}</td>
+              <td>${currency.format(payout.amount)}</td>
+              <td><span class="status-pill">${payout.status || "Pending"}</span></td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      function getOrderCount(status) {
+        return orders.filter((order) => normalize(order.status) === normalize(status)).length;
+      }
+
+      function renderStats() {
+        orders = parseStorage("trusthub-orders", []).filter(orderBelongsToSeller);
+        const successfulOrders = orders.filter((order) => {
+          const value = normalize(order.status);
+          return value === "completed" || value === "delivered";
+        });
+        const totalSales = successfulOrders.reduce((sum, order) => sum + (Number(order.amount) || 0), 0);
+        const totalEarnings = Math.round(totalSales * (isProSeller ? 0.9 : 0.82));
+        const paidOut = payoutHistory.reduce((sum, payout) => sum + (Number(payout.amount) || 0), 0);
+        const availableBalance = Math.max(0, totalEarnings - paidOut);
+        const rating = getRating();
+        const totalOrders = orders.length;
+        const deliveredOrders = getOrderCount("delivered") + getOrderCount("completed");
+        const responseRate = totalOrders ? `${Math.max(80, Math.min(100, 88 + products.length * 2))}%` : "--";
+        const deliveryRate = totalOrders ? `${Math.round((deliveredOrders / totalOrders) * 100)}%` : "--";
+
+        statTotalSales.textContent = currency.format(totalSales);
+        statPendingOrders.textContent = String(getOrderCount("pending"));
+        statProductsListed.textContent = String(products.length);
+        statEarnings.textContent = currency.format(totalEarnings);
+        statTrustScore.textContent = `${rating.toFixed(1)}/5`;
+        statSalesMeta.textContent = `Last updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+
+        ordersPending.textContent = String(getOrderCount("pending"));
+        ordersAccepted.textContent = String(getOrderCount("accepted"));
+        ordersInTransit.textContent = String(getOrderCount("in transit") + getOrderCount("shipped"));
+        ordersDelivered.textContent = String(getOrderCount("delivered"));
+        ordersCompleted.textContent = String(getOrderCount("completed"));
+
+        earningsTotal.textContent = currency.format(totalEarnings);
+        earningsAvailable.textContent = currency.format(availableBalance);
+
+        trustCompleted.textContent = String(getOrderCount("completed"));
+        trustResponseRate.textContent = responseRate;
+        trustDeliverySuccess.textContent = deliveryRate;
+
+        const filledStars = Math.round(rating);
+        trustStars.textContent = `${filledStars}/5 trusted rating`;
+      }
+
+      function scrollToAddProduct() {
+        document.getElementById("add-product").scrollIntoView({ behavior: "smooth" });
+        setTimeout(() => {
+          productName.focus();
+        }, 350);
+      }
+
+      addProductButton.addEventListener("click", scrollToAddProduct);
+      sidebarAddProductButton.addEventListener("click", scrollToAddProduct);
+
+      function updateProUI() {
+        proStatusPill.textContent = isProSeller ? "Pro Seller Active" : "Standard Plan";
+        upgradeProButton.textContent = isProSeller ? "Pro Enabled" : "Upgrade to Pro";
+        upgradeProButton.disabled = isProSeller;
+        sidebarUpgradeButton.textContent = isProSeller ? "Pro Enabled" : "Upgrade to Pro";
+      }
+
+      function activatePro() {
+        isProSeller = true;
+        sellerProfile.isPro = true;
+        sellerProfile.rating = 5;
+        setStorage(proStorageKey, true);
+        syncSellerProfile();
+        updateProUI();
+        renderProfile();
+        renderStats();
+        assistantOutput.textContent = "Pro is now active for your shop. Your listings are marked as Pro Seller and your payout rate has been updated.";
+      }
+
+      function generateAssistantResponse(type, question) {
+        const latestProduct = products[0] || null;
+        const cheapestProduct = products.slice().sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0))[0] || null;
+        const lowStockProduct = products.slice().sort((a, b) => (Number(a.stock) || 0) - (Number(b.stock) || 0))[0] || null;
+        const recentOrder = orders[0] || null;
+        let message = "";
+
+        if (!products.length && type !== "reply") {
+          message = "Upload your first product first. Once you publish a real listing, the assistant can help with pricing, descriptions, and sales advice based on your own inventory.";
+          assistantOutput.textContent = message;
+          return message;
+        }
+
+        if (type === "description" && latestProduct) {
+          message = `For ${latestProduct.name}, lead with the main benefit, mention condition or quality, include exact category details, and finish with delivery timing so buyers trust the listing quickly.`;
+        }
+
+        if (type === "pricing" && cheapestProduct) {
+          message = `Your current price range starts at ${currency.format(cheapestProduct.price)}. Keep similar items within a clear range, explain what makes yours worth more, and avoid sudden price jumps without extra value.`;
+        }
+
+        if (type === "sales" && lowStockProduct) {
+          message = `${lowStockProduct.name} is your lowest-stock item at ${lowStockProduct.stock} left. Restock early, refresh the photo, and mention limited quantity to create urgency without sounding pushy.`;
+        }
+
+        if (type === "reply") {
+          message = recentOrder
+            ? `Reply suggestion for ${recentOrder.id}: Thank you for your order. Your ${recentOrder.product || "item"} is confirmed, and I will share the next delivery update as soon as it moves to the next stage.`
+            : "Reply suggestion: Thank you for your interest. Your request has been received, and I will confirm availability, payment, and delivery timing shortly.";
+        }
+
+        if (type === "custom") {
+          const prompt = normalize(question);
+          if (!prompt) {
+            message = "Ask about descriptions, pricing, sales tips, or customer replies, and I will use your actual shop data to guide the answer.";
+          } else if (prompt.includes("price")) {
+            message = generateAssistantResponse("pricing", "");
+          } else if (prompt.includes("description") || prompt.includes("caption")) {
+            message = generateAssistantResponse("description", "");
+          } else if (prompt.includes("reply") || prompt.includes("customer")) {
+            message = generateAssistantResponse("reply", "");
+          } else if (prompt.includes("sale") || prompt.includes("sell")) {
+            message = generateAssistantResponse("sales", "");
+          } else {
+            const productLabel = latestProduct ? latestProduct.name : "your next listing";
+            message = `For "${question}", keep the message clear, trust-focused, and specific. Mention ${productLabel}, state the exact value the buyer gets, and end with a short next step such as payment confirmation or delivery timing.`;
+          }
+        }
+
+        assistantOutput.textContent = message || "Use the AI Assistant to improve listing quality, price smartly, and reply quickly to customers.";
+        return assistantOutput.textContent;
+      }
+
+      function handleUpgradeClick() {
+        if (isProSeller) {
+          document.getElementById("pro").scrollIntoView({ behavior: "smooth" });
+          assistantOutput.textContent = "Your Pro features are already active. You can use this section to review the benefits anytime.";
+          return;
+        }
+
+        activatePro();
+      }
+
+      upgradeProButton.addEventListener("click", handleUpgradeClick);
+      sidebarUpgradeButton.addEventListener("click", handleUpgradeClick);
+
+      productForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!safeString(productName.value) || !productPrice.value || !safeString(productDescription.value) || !safeString(productCategory.value) || productStock.value === "") {
+          assistantOutput.textContent = "Complete all product fields before publishing.";
+          return;
+        }
+
+        const uploadedFile = productImage.files && productImage.files[0];
+        const imageUrl = await readImageFile(uploadedFile);
+        const newProduct = {
+          id: `p-${Date.now()}`,
+          name: safeString(productName.value),
+          price: Number(productPrice.value),
+          stock: Number(productStock.value),
+          category: safeString(productCategory.value),
+          description: safeString(productDescription.value),
+          image: imageUrl,
+          sellerId: sellerStorageId
+        };
+
+        products.unshift(newProduct);
+        saveProducts();
+        renderProducts();
+        renderStats();
+        syncSellerProfile();
+
+        productForm.reset();
+        assistantOutput.textContent = `${newProduct.name} has been published to your marketplace listings. Buyers will now see this uploaded product instead of placeholder items.`;
+      });
+
+      productsTableBody.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
+          return;
+        }
+
+        const action = target.getAttribute("data-action");
+        const id = target.getAttribute("data-id");
+
+        if (!action || !id) {
+          return;
+        }
+
+        const index = products.findIndex((product) => product.id === id);
+        if (index < 0) {
+          return;
+        }
+
+        if (action === "edit") {
+          const currentStock = products[index].stock;
+          const updated = prompt(`Update stock for ${products[index].name}:`, String(currentStock));
+          if (updated !== null) {
+            const stockValue = Number(updated);
+            if (!Number.isNaN(stockValue) && stockValue >= 0) {
+              products[index].stock = stockValue;
+              saveProducts();
+              renderProducts();
+              renderStats();
+            }
+          }
+        }
+
+        if (action === "delete") {
+          const confirmed = confirm(`Delete ${products[index].name} from your listing?`);
+          if (confirmed) {
+            products.splice(index, 1);
+            saveProducts();
+            renderProducts();
+            renderStats();
+            assistantOutput.textContent = "Product removed from your live listings.";
+          }
+        }
+      });
+
+      searchInput.addEventListener("input", () => {
+        const query = normalize(searchInput.value);
+        const rows = productsTableBody.querySelectorAll("tr");
+
+        rows.forEach((row) => {
+          const text = row.textContent ? row.textContent.toLowerCase() : "";
+          row.style.display = text.includes(query) ? "" : "none";
+        });
+      });
+
+      document.querySelectorAll("[data-assistant]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          generateAssistantResponse(chip.getAttribute("data-assistant") || "description", "");
+        });
+      });
+
+      assistantGenerateButton.addEventListener("click", () => {
+        generateAssistantResponse("custom", assistantInput.value);
+      });
+
+      assistantClearButton.addEventListener("click", () => {
+        assistantInput.value = "";
+        assistantOutput.textContent = "Use the AI Assistant to improve listing quality, price smartly, and reply quickly to customers.";
+      });
+
+      assistantInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          generateAssistantResponse("custom", assistantInput.value);
+        }
+      });
+
+      updateProUI();
+      syncSellerProfile();
+      renderProfile();
+      renderProducts();
+      renderPayoutHistory();
+      renderStats();
+    });
+  </script>
+</body>
+</html>
