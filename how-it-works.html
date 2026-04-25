@@ -4,205 +4,218 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How TrustHub Africa Works</title>
-  <meta name="description" content="Learn how TrustHub Africa works for buyers and sellers through verified steps, secure payments, and trusted delivery.">
+  <meta name="description" content="See how TrustHub Africa helps verified buyers and sellers buy and sell safely with onboarding, secure marketplace tools, and trusted delivery.">
+  <meta name="author" content="TrustHub Africa">
+  <meta name="robots" content="index, follow">
+  <meta property="og:site_name" content="TrustHub Africa">
+  <meta property="og:title" content="How TrustHub Africa Works">
+  <meta property="og:description" content="See how TrustHub Africa helps verified buyers and sellers buy and sell safely with onboarding, secure marketplace tools, and trusted delivery.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://www.yourdomain.com/logo.png">
+  <meta property="og:url" content="https://www.yourdomain.com/how-it-works.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How TrustHub Africa Works">
+  <meta name="twitter:description" content="See how TrustHub Africa helps verified buyers and sellers buy and sell safely with onboarding, secure marketplace tools, and trusted delivery.">
+  <meta name="twitter:image" content="https://www.yourdomain.com/logo.png">
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .works-main .section {
-      padding: 4.5rem 0;
-    }
-
-    .page-intro {
-      background: rgba(11, 31, 58, 0.04);
-      padding: 5rem 0 4rem;
-      border-bottom: 1px solid rgba(11, 31, 58, 0.12);
-      text-align: center;
-    }
-
-    .page-intro h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      color: var(--primary);
-      margin-bottom: 0.9rem;
-      line-height: 1.08;
-    }
-
-    .page-intro p {
-      color: var(--text);
-      font-size: 1.05rem;
-    }
-
-    .section-title {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 1.5rem;
-    }
-
-    .section-title h2 {
-      color: var(--primary);
-      font-size: clamp(1.5rem, 3.5vw, 2.1rem);
-      margin-bottom: 0.6rem;
-      line-height: 1.15;
-    }
-
-    .step-grid {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.9rem;
-    }
-
-    .step-item {
-      background: var(--surface);
-      border: 1px solid rgba(11, 31, 58, 0.12);
-      border-radius: 1rem;
-      padding: 1.2rem;
-      box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .step-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 34px rgba(11, 31, 58, 0.12);
-    }
-
-    .step-head {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .step-number {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: var(--primary);
-      color: #FFFFFF;
-      font-size: 0.82rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .step-title {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 1rem;
-    }
-
-    .step-item p {
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 0.95rem;
-    }
-
-    .soft-bg {
-      background: rgba(11, 31, 58, 0.04);
-    }
-
-    .content-card {
-      max-width: 900px;
-      margin: 0 auto;
-      background: var(--surface);
-      border: 1px solid rgba(11, 31, 58, 0.12);
-      border-radius: 1rem;
-      padding: 1.4rem;
-      box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
-    }
-
-    .content-card p {
-      color: var(--text);
-      line-height: 1.7;
-    }
-
-    .content-card p + p {
-      margin-top: 0.8rem;
-    }
-
-    .safety-grid {
-      max-width: 980px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.9rem;
-    }
-
-    .safety-item {
-      background: var(--surface);
-      border: 1px solid rgba(11, 31, 58, 0.12);
-      border-radius: 1rem;
-      padding: 1rem;
-      box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
-      color: var(--text);
-    }
-
-    .works-cta {
-      background: var(--primary);
-    }
-
-    .works-cta .cta-content {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .works-cta h2 {
-      color: #FFFFFF;
-      font-size: clamp(1.3rem, 3.3vw, 2rem);
-      line-height: 1.2;
-    }
-
-    .works-cta .cta-actions {
-      display: flex;
-      gap: 0.7rem;
-      flex-wrap: wrap;
-    }
-
-    .works-cta .btn-outline {
-      border-color: #FFFFFF;
-      color: #FFFFFF;
-    }
-
-    .works-cta .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    @media (max-width: 900px) {
-      .step-grid,
-      .safety-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 720px) {
       .works-main .section {
-        padding: 3.3rem 0;
+        padding: 4.5rem 0;
       }
-
+  
       .page-intro {
-        padding: 4rem 0 3rem;
+        background: rgba(11, 31, 58, 0.04);
+        padding: 5rem 0 4rem;
+        border-bottom: 1px solid rgba(11, 31, 58, 0.12);
+        text-align: center;
       }
-
+  
+      .page-intro h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        color: var(--primary);
+        margin-bottom: 0.9rem;
+        line-height: 1.08;
+      }
+  
+      .page-intro p {
+        color: var(--text);
+        font-size: 1.05rem;
+      }
+  
+      .section-title {
+        text-align: center;
+        max-width: 760px;
+        margin: 0 auto 1.5rem;
+      }
+  
+      .section-title h2 {
+        color: var(--primary);
+        font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+        margin-bottom: 0.6rem;
+        line-height: 1.15;
+      }
+  
+      .step-grid {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+      }
+  
+      .step-item {
+        background: var(--surface);
+        border: 1px solid rgba(11, 31, 58, 0.12);
+        border-radius: 1rem;
+        padding: 1.2rem;
+        box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+  
+      .step-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 34px rgba(11, 31, 58, 0.12);
+      }
+  
+      .step-head {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 0.4rem;
+      }
+  
+      .step-number {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: var(--primary);
+        color: #FFFFFF;
+        font-size: 0.82rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+  
+      .step-title {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 1rem;
+      }
+  
+      .step-item p {
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 0.95rem;
+      }
+  
+      .soft-bg {
+        background: rgba(11, 31, 58, 0.04);
+      }
+  
+      .content-card {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--surface);
+        border: 1px solid rgba(11, 31, 58, 0.12);
+        border-radius: 1rem;
+        padding: 1.4rem;
+        box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
+      }
+  
+      .content-card p {
+        color: var(--text);
+        line-height: 1.7;
+      }
+  
+      .content-card p + p {
+        margin-top: 0.8rem;
+      }
+  
+      .safety-grid {
+        max-width: 980px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+      }
+  
+      .safety-item {
+        background: var(--surface);
+        border: 1px solid rgba(11, 31, 58, 0.12);
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow: 0 10px 30px rgba(11, 31, 58, 0.08);
+        color: var(--text);
+      }
+  
+      .works-cta {
+        background: var(--primary);
+      }
+  
       .works-cta .cta-content {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
       }
-
+  
+      .works-cta h2 {
+        color: #FFFFFF;
+        font-size: clamp(1.3rem, 3.3vw, 2rem);
+        line-height: 1.2;
+      }
+  
       .works-cta .cta-actions {
-        width: 100%;
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
       }
-
-      .works-cta .cta-actions .btn {
-        width: 100%;
+  
+      .works-cta .btn-outline {
+        border-color: #FFFFFF;
+        color: #FFFFFF;
       }
-    }
-  </style>
+  
+      .works-cta .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+  
+      @media (max-width: 900px) {
+        .step-grid,
+        .safety-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+  
+      @media (max-width: 720px) {
+        .works-main .section {
+          padding: 3.3rem 0;
+        }
+  
+        .page-intro {
+          padding: 4rem 0 3rem;
+        }
+  
+        .works-cta .cta-content {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+  
+        .works-cta .cta-actions {
+          width: 100%;
+        }
+  
+        .works-cta .cta-actions .btn {
+          width: 100%;
+        }
+      }
+    </style>
 </head>
 <body>
   <header class="site-header" id="top">
