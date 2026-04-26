@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.yourdomain.com/index.html</loc>
+    <loc>https://www.yourdomain.com/</loc>
   </url>
   <url>
     <loc>https://www.yourdomain.com/about.html</loc>
@@ -17,18 +17,6 @@
   </url>
   <url>
     <loc>https://www.yourdomain.com/login.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/verify.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/buyer-dashboard.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/seller-dashboard.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/product.html</loc>
   </url>
   <url>
     <loc>https://www.yourdomain.com/cart.html</loc>
@@ -47,20 +35,5 @@
   </url>
   <url>
     <loc>https://www.yourdomain.com/social.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/terms.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/privacy.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/seller-rules.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/refund-policy.html</loc>
-  </url>
-  <url>
-    <loc>https://www.yourdomain.com/delivery-policy.html</loc>
   </url>
 </urlset>

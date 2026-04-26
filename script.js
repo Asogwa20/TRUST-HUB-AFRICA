@@ -1,3 +1,29 @@
+function getPreferredTheme() {
+  try {
+    const savedTheme = localStorage.getItem("trusthub-theme");
+    if (savedTheme === "dark" || savedTheme === "light") {
+      return savedTheme;
+    }
+  } catch (error) {
+    // Ignore storage issues and fall back to a safe default.
+  }
+
+  if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    return "dark";
+  }
+
+  return "light";
+}
+
+function applyTheme(theme) {
+  const nextTheme = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", nextTheme);
+  document.documentElement.style.colorScheme = nextTheme;
+  return nextTheme;
+}
+
+applyTheme(getPreferredTheme());
+
 const TrustHub = (() => {
   const CATEGORIES = [
     "Food",
@@ -259,6 +285,11 @@ const TrustHub = (() => {
   }
 
   function resolveImage(image, fallback = "logo.png") {
+    if (Array.isArray(image)) {
+      const firstImage = image.find((item) => safeString(item));
+      return resolveImage(firstImage || fallback, fallback);
+    }
+
     const value = safeString(image);
     if (!value || value.startsWith("blob:")) {
       return fallback;
@@ -645,6 +676,7 @@ const TrustHub = (() => {
           phone: payload.phone,
           password: payload.password,
           location: payload.location,
+          country: payload.country,
           preferredCategories: payload.preferredCategories,
           referralCode: payload.referralCode,
           verificationStatus: "Pending Email Verification",
@@ -684,9 +716,13 @@ const TrustHub = (() => {
           password: payload.password,
           dateOfBirth: payload.dateOfBirth,
           age: calculateAge(payload.dateOfBirth),
+          school: payload.school,
+          businessName: payload.businessName,
           whatYouSell: payload.whatYouSell,
           productCategory: payload.productCategory,
           location: payload.location,
+          state: payload.state,
+          country: payload.country,
           verificationDetails: payload.verificationDetails,
           referralCode: payload.referralCode,
           verificationStatus: "Pending Email Verification",
@@ -1582,16 +1618,18 @@ function initThemeAndMenu() {
   const menuToggle = document.querySelector(".menu-toggle");
   const mainNav = document.querySelector(".main-nav");
   const navLinks = document.querySelectorAll(".nav-list a");
-  const savedTheme = localStorage.getItem("trusthub-theme");
+  const savedTheme = getPreferredTheme();
 
-  root.setAttribute("data-theme", savedTheme === "dark" || savedTheme === "light" ? savedTheme : "light");
+  applyTheme(savedTheme);
 
   if (themeToggle) {
+    themeToggle.setAttribute("aria-pressed", savedTheme === "dark" ? "true" : "false");
     themeToggle.addEventListener("click", () => {
       const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
       const next = current === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
+      applyTheme(next);
       localStorage.setItem("trusthub-theme", next);
+      themeToggle.setAttribute("aria-pressed", next === "dark" ? "true" : "false");
     });
   }
 
@@ -1933,6 +1971,7 @@ function initBuyerSignup() {
   const password = document.getElementById("buyer-password");
   const confirmPassword = document.getElementById("buyer-confirm-password");
   const location = document.getElementById("buyer-location");
+  const country = document.getElementById("buyer-country");
   const referralCode = document.getElementById("buyer-referral-code");
   const submitButton = document.getElementById("buyer-submit");
   const strengthBadge = document.getElementById("buyer-strength-badge");
@@ -2064,6 +2103,15 @@ function initBuyerSignup() {
       setInputError("buyer-location", "");
     }
 
+    if (!TrustHub.safeString(country.value)) {
+      valid = false;
+      if (showErrors) {
+        setInputError("buyer-country", "Country is required.");
+      }
+    } else {
+      setInputError("buyer-country", "");
+    }
+
     if (!categorySelect.getValues().length) {
       valid = false;
       if (showErrors) {
@@ -2087,7 +2135,7 @@ function initBuyerSignup() {
   }
 
   attachFieldValidation(
-    [firstName, lastName, email, phone, password, confirmPassword, location, ...agreements],
+    [firstName, lastName, email, phone, password, confirmPassword, location, country, ...agreements],
     validate
   );
 
@@ -2108,6 +2156,7 @@ function initBuyerSignup() {
       phone: TrustHub.safeString(phone.value),
       password: password.value,
       location: TrustHub.safeString(location.value),
+      country: TrustHub.safeString(country.value),
       preferredCategories: categorySelect.getValues(),
       referralCode: TrustHub.safeString(referralCode.value)
     });
@@ -2144,6 +2193,7 @@ function initSellerSignup() {
   const productCategoryInputs = Array.from(document.querySelectorAll("#seller-product-category-select input[type='checkbox']"));
   const whatYouSell = document.getElementById("seller-what-you-sell");
   const location = document.getElementById("seller-location");
+  const country = document.getElementById("seller-country");
   const verificationDetails = document.getElementById("seller-verification-details");
   const referralCode = document.getElementById("seller-referral-code");
   const submitButton = document.getElementById("seller-submit");
@@ -2168,6 +2218,7 @@ function initSellerSignup() {
   const phonePattern = /^[+]?\d{8,15}$/;
 
   bindShowPassword("seller-show-password", ["seller-password", "seller-confirm-password"]);
+  dateOfBirth.max = new Date().toISOString().split("T")[0];
 
   function syncSchoolField() {
     const isOther = TrustHub.safeString(school.value) === "Others";
@@ -2202,7 +2253,9 @@ function initSellerSignup() {
     const age = TrustHub.calculateAge(dateOfBirth.value);
     agePreview.textContent = age === null
       ? "Age will appear here after you pick a valid date of birth."
-      : `Calculated age: ${age}`;
+      : age < 18
+        ? `You must be at least 18. Current age: ${age}`
+        : `Calculated age: ${age}`;
     return age;
   }
 
@@ -2302,6 +2355,11 @@ function initSellerSignup() {
       if (showErrors) {
         setInputError("seller-date-of-birth", "Enter a valid date of birth.");
       }
+    } else if (age < 18) {
+      valid = false;
+      if (showErrors) {
+        setInputError("seller-date-of-birth", "You must be at least 18 years old.");
+      }
     } else {
       setInputError("seller-date-of-birth", "");
     }
@@ -2356,6 +2414,15 @@ function initSellerSignup() {
       setInputError("seller-location", "");
     }
 
+    if (!TrustHub.safeString(country.value)) {
+      valid = false;
+      if (showErrors) {
+        setInputError("seller-country", "Country is required.");
+      }
+    } else {
+      setInputError("seller-country", "");
+    }
+
     if (!TrustHub.safeString(verificationDetails.value)) {
       valid = false;
       if (showErrors) {
@@ -2379,7 +2446,7 @@ function initSellerSignup() {
   }
 
   attachFieldValidation(
-    [firstName, lastName, email, phone, password, confirmPassword, dateOfBirth, school, schoolOther, whatYouSell, location, verificationDetails, ...agreements],
+    [firstName, lastName, email, phone, password, confirmPassword, dateOfBirth, school, schoolOther, whatYouSell, location, country, verificationDetails, ...agreements],
     validate
   );
 
@@ -2415,7 +2482,7 @@ function initSellerSignup() {
       productCategory: productCategorySelect.getValues(),
       location: TrustHub.safeString(location.value),
       state: "Enugu",
-      country: "Nigeria",
+      country: TrustHub.safeString(country.value),
       verificationDetails: TrustHub.safeString(verificationDetails.value),
       referralCode: TrustHub.safeString(referralCode.value)
     });
@@ -4252,6 +4319,6 @@ function initContact() {
     }
 
     form.reset();
-    success.textContent = "Thanks for reaching out. Our support team will get back to you shortly.";
+    success.textContent = "Message received. We'll contact you shortly.";
   });
 }

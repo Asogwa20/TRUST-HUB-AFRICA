@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <style>
       :root {
         --primary: #0B1F3A;
@@ -524,6 +525,72 @@
         margin-top: 0.45rem;
         font-size: 0.74rem;
       }
+
+      .upload-placeholder small {
+        display: block;
+        margin-top: 0.3rem;
+        color: #64748B;
+      }
+
+      .upload-feedback {
+        margin: 0.55rem 0 0;
+        font-size: 0.82rem;
+        color: #64748B;
+      }
+
+      .upload-feedback.is-error {
+        color: #B91C1C;
+      }
+
+      .product-image-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.85rem;
+      }
+
+      .product-image-preview[hidden] {
+        display: none;
+      }
+
+      .product-image-preview-card {
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        background: #FFFFFF;
+        overflow: hidden;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      }
+
+      .product-image-preview-card img {
+        display: block;
+        width: 100%;
+        height: 92px;
+        object-fit: cover;
+      }
+
+      .product-image-preview-card span {
+        display: block;
+        padding: 0.45rem 0.55rem 0.55rem;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #475569;
+      }
+
+      [data-theme="dark"] .upload-placeholder {
+        background: #182234;
+        border-color: #334155;
+      }
+
+      [data-theme="dark"] .upload-placeholder small,
+      [data-theme="dark"] .upload-feedback,
+      [data-theme="dark"] .product-image-preview-card span {
+        color: #CBD5E1;
+      }
+
+      [data-theme="dark"] .product-image-preview-card {
+        background: #1E293B;
+        border-color: #334155;
+      }
   
       .table-wrap {
         border: 1px solid #E4E9F0;
@@ -918,7 +985,7 @@
       }
     </style>
 </head>
-<body data-protected="true" data-role="seller">
+<body data-page="seller-dashboard" data-protected="true" data-role="seller">
   <div class="dashboard-shell">
     <aside class="sidebar" aria-label="Seller navigation">
       <div class="brand">
@@ -966,6 +1033,10 @@
             </svg>
             <input type="search" id="dashboard-search" placeholder="Search products, orders, payouts">
           </label>
+          <button class="theme-toggle" type="button" aria-label="Switch color theme">
+            <span class="theme-toggle__sun" aria-hidden="true">Light</span>
+            <span class="theme-toggle__moon" aria-hidden="true">Dark</span>
+          </button>
 
           <button class="icon-btn" aria-label="Notifications">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -1134,11 +1205,14 @@
               </div>
 
               <div class="field full">
-                <label>Image Upload</label>
+                <label for="product-image">Product Images</label>
                 <div class="upload-placeholder">
-                  Drop product image here or browse
-                  <input type="file" id="product-image" accept="image/*">
+                  Drop product images here or browse
+                  <small>JPG, JPEG, or PNG only. Select up to 3 images, 2MB each.</small>
+                  <input type="file" id="product-image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" multiple>
                 </div>
+                <p class="upload-feedback" id="product-image-feedback">Selected images will preview here before publishing.</p>
+                <div class="product-image-preview" id="product-image-preview" hidden aria-live="polite"></div>
               </div>
 
               <div class="field full" style="display:flex; justify-content:flex-end;">
@@ -1379,6 +1453,11 @@
       }
 
       function resolveImage(image) {
+        if (Array.isArray(image)) {
+          const firstImage = image.find((item) => safeString(item));
+          return resolveImage(firstImage || "logo.png");
+        }
+
         const value = safeString(image);
         if (!value || value.startsWith("blob:")) {
           return "logo.png";
@@ -1386,8 +1465,8 @@
         return value;
       }
 
-      function readImageFile(file) {
-        return new Promise((resolve) => {
+      function optimiseImageFile(file) {
+        return new Promise((resolve, reject) => {
           if (!file) {
             resolve("logo.png");
             return;
@@ -1395,9 +1474,34 @@
 
           const reader = new FileReader();
           reader.onload = () => {
-            resolve(typeof reader.result === "string" ? reader.result : "logo.png");
+            const source = typeof reader.result === "string" ? reader.result : "";
+            if (!source) {
+              reject(new Error("Unable to read the selected image."));
+              return;
+            }
+
+            const image = new Image();
+            image.onload = () => {
+              const canvas = document.createElement("canvas");
+              const maxDimension = 1280;
+              const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+              canvas.width = Math.max(1, Math.round(image.width * scale));
+              canvas.height = Math.max(1, Math.round(image.height * scale));
+
+              const context = canvas.getContext("2d");
+              if (!context) {
+                resolve(source);
+                return;
+              }
+
+              context.drawImage(image, 0, 0, canvas.width, canvas.height);
+              const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+              resolve(canvas.toDataURL(outputType, 0.82));
+            };
+            image.onerror = () => reject(new Error("Unable to process the selected image."));
+            image.src = source;
           };
-          reader.onerror = () => resolve("logo.png");
+          reader.onerror = () => reject(new Error("Unable to read the selected image."));
           reader.readAsDataURL(file);
         });
       }
@@ -1458,7 +1562,18 @@
       let isProSeller = Boolean(parseStorage(proStorageKey, sellerProfile.isPro || false));
       let products = parseStorage(productStorageKey, [])
         .filter((product) => product && !isDemoProduct(product))
-        .map((product) => ({ ...product, image: resolveImage(product.image) }));
+        .map((product) => {
+          const images = Array.isArray(product.images)
+            ? product.images.filter((item) => safeString(item) && !safeString(item).startsWith("blob:"))
+            : [];
+          const image = resolveImage(product.image || images);
+
+          return {
+            ...product,
+            image,
+            images: images.length ? images : (image !== "logo.png" ? [image] : [])
+          };
+        });
       let orders = parseStorage("trusthub-orders", []).filter(orderBelongsToSeller);
       let payoutHistory = parseStorage(`trusthub-seller-payouts-${sellerStorageId}`, parseStorage("trusthub-seller-payouts", []));
 
@@ -1500,6 +1615,8 @@
       const productPrice = document.getElementById("product-price");
       const productDescription = document.getElementById("product-description");
       const productImage = document.getElementById("product-image");
+      const productImagePreview = document.getElementById("product-image-preview");
+      const productImageFeedback = document.getElementById("product-image-feedback");
       const productCategory = document.getElementById("product-category");
       const productStock = document.getElementById("product-stock");
       const addProductButton = document.getElementById("add-product-btn");
@@ -1513,6 +1630,10 @@
       const assistantOutput = document.getElementById("assistant-output");
       const assistantGenerateButton = document.getElementById("assistant-generate-btn");
       const assistantClearButton = document.getElementById("assistant-clear-btn");
+      const allowedImageTypes = new Set(["image/jpeg", "image/png"]);
+      const maxProductImageSize = 2 * 1024 * 1024;
+      const maxProductImageCount = 3;
+      let selectedProductImages = [];
 
       function getSellerName() {
         return sellerProfile.shopName || sellerProfile.businessName || sellerProfile.school || sellerProfile.fullName || "Seller Shop";
@@ -1578,8 +1699,103 @@
       function saveProducts() {
         products = products
           .filter((product) => product && !isDemoProduct(product))
-          .map((product) => ({ ...product, image: resolveImage(product.image) }));
+          .map((product) => {
+            const images = Array.isArray(product.images)
+              ? product.images.filter((item) => safeString(item) && !safeString(item).startsWith("blob:"))
+              : [];
+            const image = resolveImage(product.image || images);
+
+            return {
+              ...product,
+              image,
+              images: images.length ? images : (image !== "logo.png" ? [image] : [])
+            };
+          });
         setStorage(productStorageKey, products);
+      }
+
+      function setProductImageFeedback(message, isError) {
+        productImageFeedback.textContent = message;
+        productImageFeedback.classList.toggle("is-error", Boolean(isError));
+      }
+
+      function renderProductImagePreview() {
+        if (!selectedProductImages.length) {
+          productImagePreview.hidden = true;
+          productImagePreview.innerHTML = "";
+          return;
+        }
+
+        productImagePreview.hidden = false;
+        productImagePreview.innerHTML = selectedProductImages.map((image, index) => `
+          <div class="product-image-preview-card">
+            <img src="${image}" alt="Selected product image ${index + 1}">
+            <span>Preview ${index + 1}</span>
+          </div>
+        `).join("");
+      }
+
+      async function handleProductImageSelection() {
+        const files = Array.from(productImage.files || []);
+        selectedProductImages = [];
+
+        if (!files.length) {
+          renderProductImagePreview();
+          setProductImageFeedback("Selected images will preview here before publishing.", false);
+          return;
+        }
+
+        if (files.length > maxProductImageCount) {
+          productImage.value = "";
+          renderProductImagePreview();
+          setProductImageFeedback(`Select up to ${maxProductImageCount} images per product.`, true);
+          return;
+        }
+
+        const acceptedFiles = [];
+        const skippedMessages = [];
+
+        files.forEach((file) => {
+          const fileName = safeString(file.name).toLowerCase();
+          const hasAllowedType = allowedImageTypes.has(file.type) || /\.(jpg|jpeg|png)$/.test(fileName);
+
+          if (!hasAllowedType) {
+            skippedMessages.push(`${file.name}: use JPG or PNG.`);
+            return;
+          }
+
+          if (file.size > maxProductImageSize) {
+            skippedMessages.push(`${file.name}: keep each image under 2MB.`);
+            return;
+          }
+
+          acceptedFiles.push(file);
+        });
+
+        if (!acceptedFiles.length) {
+          productImage.value = "";
+          renderProductImagePreview();
+          setProductImageFeedback(skippedMessages[0] || "Select at least one JPG or PNG image.", true);
+          return;
+        }
+
+        setProductImageFeedback("Please wait...", false);
+
+        try {
+          selectedProductImages = await Promise.all(acceptedFiles.map((file) => optimiseImageFile(file)));
+          renderProductImagePreview();
+
+          if (skippedMessages.length) {
+            setProductImageFeedback(skippedMessages[0], true);
+          } else {
+            setProductImageFeedback(`${selectedProductImages.length} image${selectedProductImages.length === 1 ? "" : "s"} ready to publish.`, false);
+          }
+        } catch (error) {
+          selectedProductImages = [];
+          productImage.value = "";
+          renderProductImagePreview();
+          setProductImageFeedback("We could not process those images. Try different JPG or PNG files.", true);
+        }
       }
 
       function renderProducts() {
@@ -1597,7 +1813,7 @@
         productsTableBody.innerHTML = products.map((product) => `
           <tr class="product-row">
             <td>
-              <img src="${resolveImage(product.image)}" alt="${product.name}" class="product-thumb">
+              <img src="${resolveImage(product.image || product.images)}" alt="${product.name}" class="product-thumb">
             </td>
             <td>
               <div class="product-cell">
@@ -1787,6 +2003,7 @@
 
       upgradeProButton.addEventListener("click", handleUpgradeClick);
       sidebarUpgradeButton.addEventListener("click", handleUpgradeClick);
+      productImage.addEventListener("change", handleProductImageSelection);
 
       productForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -1796,8 +2013,12 @@
           return;
         }
 
-        const uploadedFile = productImage.files && productImage.files[0];
-        const imageUrl = await readImageFile(uploadedFile);
+        if (productImage.files && productImage.files.length && !selectedProductImages.length) {
+          assistantOutput.textContent = "Please wait for the selected images to finish processing.";
+          return;
+        }
+
+        const imageUrl = selectedProductImages[0] || "logo.png";
         const newProduct = {
           id: `p-${Date.now()}`,
           name: safeString(productName.value),
@@ -1806,6 +2027,7 @@
           category: safeString(productCategory.value),
           description: safeString(productDescription.value),
           image: imageUrl,
+          images: selectedProductImages.slice(),
           sellerId: sellerStorageId
         };
 
@@ -1816,6 +2038,9 @@
         syncSellerProfile();
 
         productForm.reset();
+        selectedProductImages = [];
+        renderProductImagePreview();
+        setProductImageFeedback("Selected images will preview here before publishing.", false);
         assistantOutput.textContent = `${newProduct.name} has been published to your marketplace listings. Buyers will now see this uploaded product instead of placeholder items.`;
       });
 

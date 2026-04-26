@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
   <style>
       :root {
         --primary: #0B1F3A;
@@ -1278,7 +1279,7 @@
       }
     </style>
 </head>
-<body data-protected="true" data-role="buyer">
+<body data-page="buyer-dashboard" data-protected="true" data-role="buyer">
   <div class="dashboard-shell">
     <aside class="sidebar" aria-label="Buyer dashboard sidebar">
       <a class="brand-block" href="index.html" aria-label="TrustHub Africa home">
@@ -1346,6 +1347,10 @@
             <option value="Beauty">Beauty</option>
             <option value="Others">Others</option>
           </select>
+          <button class="theme-toggle" type="button" aria-label="Switch color theme">
+            <span class="theme-toggle__sun" aria-hidden="true">Light</span>
+            <span class="theme-toggle__moon" aria-hidden="true">Dark</span>
+          </button>
 
           <button class="icon-button" type="button" aria-label="Notifications">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1629,6 +1634,11 @@
       }
 
       function resolveImage(image) {
+        if (Array.isArray(image)) {
+          const firstImage = image.find((item) => safeString(item));
+          return resolveImage(firstImage || "logo.png");
+        }
+
         const value = safeString(image);
         if (!value || value.startsWith("blob:")) {
           return "logo.png";
