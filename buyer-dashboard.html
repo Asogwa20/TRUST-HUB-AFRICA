@@ -1852,7 +1852,7 @@
         const featuredProducts = filteredMarketplaceProducts.slice(0, 6);
         productGrid.innerHTML = featuredProducts.map((product, index) => {
           const palette = ["navy", "green", "gold", "slate"][index % 4];
-          const badge = product.isPro ? "Pro Seller" : "Trust Badge";
+          const badge = "Verified Seller";
           return `
             <article class="product-card">
               <div class="product-art ${palette}" style="background-image:url('${product.image}');background-size:cover;background-position:center;">
@@ -1905,7 +1905,7 @@
           return `
             <article class="saved-card">
               <div class="saved-art ${palette}" style="background-image:url('${resolveImage(item.image)}');background-size:cover;background-position:center;">
-                <span class="trust-badge">${item.isPro ? "Pro Seller" : "Trust Badge"}</span>
+                <span class="trust-badge">Verified Seller</span>
               </div>
               <div class="saved-body">
                 <div class="saved-title-row">
@@ -1988,7 +1988,7 @@
         sellerGrid.innerHTML = sellerSummaries.slice(0, 6).map((seller) => `
           <article class="seller-card">
             <div class="seller-body">
-              <span class="trust-badge">${seller.isPro ? "Pro Seller" : "Trust Badge"}</span>
+              <span class="trust-badge">Verified Seller</span>
               <strong>${seller.sellerName}</strong>
               <div class="seller-meta">
                 <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>

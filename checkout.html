@@ -72,8 +72,35 @@
           <div class="th-panel">
             <div class="th-page-header">
               <div>
+                <span class="th-kicker">Fulfillment</span>
+                <h2>How should this order reach you?</h2>
+                <p>Choose pickup if you will collect it yourself, or delivery if TrustHub should send it to your address.</p>
+              </div>
+            </div>
+
+            <div class="th-fulfillment-choice" id="checkout-fulfillment-choice" role="radiogroup" aria-label="Choose pickup or delivery">
+              <label class="th-radio-card th-fulfillment-card">
+                <input type="radio" name="fulfillmentMethod" value="delivery" checked>
+                <span>
+                  <strong>Deliver to me</strong>
+                  <small>Use a saved delivery address and include the delivery fee in your total.</small>
+                </span>
+              </label>
+              <label class="th-radio-card th-fulfillment-card">
+                <input type="radio" name="fulfillmentMethod" value="pickup">
+                <span>
+                  <strong>I will pick it up myself</strong>
+                  <small>No delivery fee. The seller can arrange pickup details after payment is confirmed.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="th-panel" id="checkout-address-panel">
+            <div class="th-page-header">
+              <div>
                 <h2>Delivery Address</h2>
-                <p>Choose from saved addresses or create a new one for this order.</p>
+                <p id="checkout-address-copy">Choose from saved addresses or create a new one for this order.</p>
               </div>
             </div>
 
@@ -137,9 +164,10 @@
               <strong id="checkout-delivery">NGN 0</strong>
             </div>
             <div class="th-summary-row">
-              <span>Service Fee</span>
+              <span>TrustHub Charge</span>
               <strong id="checkout-service">NGN 0</strong>
             </div>
+            <p class="th-field-note" id="checkout-charge-note">The TrustHub charge is calculated from your order subtotal.</p>
             <div class="th-summary-row th-summary-total">
               <span>Total</span>
               <strong id="checkout-total">NGN 0</strong>

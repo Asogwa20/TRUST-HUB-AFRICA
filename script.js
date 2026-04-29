@@ -1,28 +1,45 @@
 function getPreferredTheme() {
-  try {
-    const savedTheme = localStorage.getItem("trusthub-theme");
-    if (savedTheme === "dark" || savedTheme === "light") {
-      return savedTheme;
-    }
-  } catch (error) {
-    // Ignore storage issues and fall back to a safe default.
-  }
-
-  if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    return "dark";
-  }
-
   return "light";
 }
 
 function applyTheme(theme) {
-  const nextTheme = theme === "dark" ? "dark" : "light";
+  const nextTheme = "light";
   document.documentElement.setAttribute("data-theme", nextTheme);
   document.documentElement.style.colorScheme = nextTheme;
   return nextTheme;
 }
 
 applyTheme(getPreferredTheme());
+
+const thClientState = new Map();
+
+function readClientState(key, fallback = null) {
+  try {
+    const value = thClientState.get(key);
+    return value === undefined ? fallback : JSON.parse(value);
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function writeClientState(key, value) {
+  thClientState.set(key, JSON.stringify(value));
+  return value;
+}
+
+function readClientText(key) {
+  const value = thClientState.get(key);
+  return typeof value === "string" ? value : "";
+}
+
+function writeClientText(key, value) {
+  thClientState.set(key, String(value || ""));
+  return value;
+}
+
+function removeClientState(key) {
+  thClientState.delete(key);
+}
 
 const TrustHub = (() => {
   const CATEGORIES = [
@@ -132,19 +149,19 @@ const TrustHub = (() => {
   }
 
   function getUsers() {
-    return safeParse(localStorage.getItem("trusthub-users"), []).map((user) => syncUserRecord(user));
+    return readClientState("trusthub-users", []).map((user) => syncUserRecord(user));
   }
 
   function setUsers(users) {
-    localStorage.setItem("trusthub-users", JSON.stringify((users || []).map((user) => syncUserRecord(user))));
+    writeClientState("trusthub-users", (users || []).map((user) => syncUserRecord(user)));
   }
 
   function getCurrentUser() {
-    return syncUserRecord(safeParse(localStorage.getItem("trusthub-current-user"), {}));
+    return syncUserRecord(readClientState("trusthub-current-user", {}));
   }
 
   function setCurrentUser(user) {
-    localStorage.setItem("trusthub-current-user", JSON.stringify(syncUserRecord(user || {})));
+    writeClientState("trusthub-current-user", syncUserRecord(user || {}));
   }
 
   function calculateAge(dateOfBirth) {
@@ -340,22 +357,22 @@ const TrustHub = (() => {
   }
 
   function getAddresses(user = getCurrentUser()) {
-    return safeParse(localStorage.getItem(getAddressesKey(user)), []).filter(Boolean);
+    return readClientState(getAddressesKey(user), []).filter(Boolean);
   }
 
   function setAddresses(addresses, user = getCurrentUser()) {
     const cleanAddresses = (addresses || []).filter(Boolean);
-    localStorage.setItem(getAddressesKey(user), JSON.stringify(cleanAddresses));
+    writeClientState(getAddressesKey(user), cleanAddresses);
     return cleanAddresses;
   }
 
   function getNotifications(user = getCurrentUser()) {
-    return safeParse(localStorage.getItem(getNotificationsKey(user)), []).filter(Boolean);
+    return readClientState(getNotificationsKey(user), []).filter(Boolean);
   }
 
   function setNotifications(notifications, user = getCurrentUser()) {
     const cleanNotifications = (notifications || []).filter(Boolean);
-    localStorage.setItem(getNotificationsKey(user), JSON.stringify(cleanNotifications.slice(0, 50)));
+    writeClientState(getNotificationsKey(user), cleanNotifications.slice(0, 50));
     return cleanNotifications;
   }
 
@@ -380,7 +397,7 @@ const TrustHub = (() => {
   function getNotificationSettings(user = getCurrentUser()) {
     return {
       ...getDefaultNotificationSettings(),
-      ...safeParse(localStorage.getItem(getNotificationSettingsKey(user)), {})
+      ...readClientState(getNotificationSettingsKey(user), {})
     };
   }
 
@@ -389,24 +406,24 @@ const TrustHub = (() => {
       ...getDefaultNotificationSettings(),
       ...(settings || {})
     };
-    localStorage.setItem(getNotificationSettingsKey(user), JSON.stringify(nextSettings));
+    writeClientState(getNotificationSettingsKey(user), nextSettings);
     return nextSettings;
   }
 
   function getCartItems() {
-    return safeParse(localStorage.getItem("trusthub-cart"), []).filter(Boolean);
+    return readClientState("trusthub-cart", []).filter(Boolean);
   }
 
   function setCartItems(items) {
-    localStorage.setItem("trusthub-cart", JSON.stringify((items || []).filter(Boolean)));
+    writeClientState("trusthub-cart", (items || []).filter(Boolean));
   }
 
   function getAdminLogs() {
-    return safeParse(localStorage.getItem("trusthub-admin-logs"), []);
+    return readClientState("trusthub-admin-logs", []);
   }
 
   function setAdminLogs(logs) {
-    localStorage.setItem("trusthub-admin-logs", JSON.stringify(logs || []));
+    writeClientState("trusthub-admin-logs", logs || []);
   }
 
   function addAdminLog(action, details, actor = getCurrentUser()) {
@@ -424,11 +441,11 @@ const TrustHub = (() => {
   }
 
   function getDisputes() {
-    return safeParse(localStorage.getItem("trusthub-disputes"), []);
+    return readClientState("trusthub-disputes", []);
   }
 
   function setDisputes(disputes) {
-    localStorage.setItem("trusthub-disputes", JSON.stringify(disputes || []));
+    writeClientState("trusthub-disputes", disputes || []);
   }
 
   function updateStoredUser(targetUser, updates) {
@@ -474,7 +491,7 @@ const TrustHub = (() => {
       })
       .flatMap((seller) => {
         const storageId = getSellerStorageId(seller);
-        const products = safeParse(localStorage.getItem(`trusthub-seller-products-${storageId}`), []);
+        const products = readClientState(`trusthub-seller-products-${storageId}`, []);
 
         return products
           .filter((product) => product && !isDemoProduct(product))
@@ -494,11 +511,11 @@ const TrustHub = (() => {
   }
 
   function setSelectedProduct(product) {
-    localStorage.setItem("trusthub-selected-product", JSON.stringify(product || null));
+    writeClientState("trusthub-selected-product", product || null);
   }
 
   function getSelectedProduct() {
-    return safeParse(localStorage.getItem("trusthub-selected-product"), null);
+    return readClientState("trusthub-selected-product", null);
   }
 
   function getSavedItemsKey(user = getCurrentUser()) {
@@ -506,16 +523,16 @@ const TrustHub = (() => {
   }
 
   function getSavedItems(user = getCurrentUser()) {
-    return safeParse(
-      localStorage.getItem(getSavedItemsKey(user)),
-      safeParse(localStorage.getItem("trusthub-saved-items"), [])
+    return readClientState(
+      getSavedItemsKey(user),
+      readClientState("trusthub-saved-items", [])
     ).filter((item) => item && !isDemoProduct(item));
   }
 
   function setSavedItems(items, user = getCurrentUser()) {
     const cleanItems = (items || []).filter((item) => item && !isDemoProduct(item));
-    localStorage.setItem(getSavedItemsKey(user), JSON.stringify(cleanItems));
-    localStorage.setItem("trusthub-saved-items", JSON.stringify(cleanItems));
+    writeClientState(getSavedItemsKey(user), cleanItems);
+    writeClientState("trusthub-saved-items", cleanItems);
     return cleanItems;
   }
 
@@ -585,18 +602,41 @@ const TrustHub = (() => {
     return updateCartItem(productId, sellerId, 0);
   }
 
-  function getCartSummary(items = getCartItems(), selectedAddress = null) {
+  function getServiceChargeRate(subtotal) {
+    const value = Number(subtotal) || 0;
+    if (value <= 0) {
+      return 0;
+    }
+
+    if (value <= 5000) {
+      return 0.1;
+    }
+
+    if (value <= 15000) {
+      return 0.13;
+    }
+
+    return 0.2;
+  }
+
+  function getCartSummary(items = getCartItems(), selectedAddress = null, fulfillmentMethod = "delivery") {
     const cleanItems = (items || []).filter(Boolean);
     const subtotal = cleanItems.reduce((sum, item) => {
       return sum + (Number(item.price) || 0) * (Number(item.quantity) || 1);
     }, 0);
-    const deliveryFee = cleanItems.length ? Number(selectedAddress && selectedAddress.deliveryFee) || 1500 : 0;
-    const serviceFee = cleanItems.length ? Math.round(subtotal * 0.025) : 0;
+    const fulfillment = normalize(fulfillmentMethod) === "pickup" ? "pickup" : "delivery";
+    const deliveryFee = cleanItems.length && fulfillment === "delivery"
+      ? Number(selectedAddress && selectedAddress.deliveryFee) || 1500
+      : 0;
+    const serviceRate = getServiceChargeRate(subtotal);
+    const serviceFee = cleanItems.length ? Math.round(subtotal * serviceRate) : 0;
 
     return {
       items: cleanItems,
       subtotal,
       deliveryFee,
+      fulfillmentMethod: fulfillment,
+      serviceRate,
       serviceFee,
       total: subtotal + deliveryFee + serviceFee
     };
@@ -689,7 +729,7 @@ const TrustHub = (() => {
 
         setUsers([...users, buyer]);
         setCurrentUser(createSessionPayload(buyer));
-        localStorage.setItem("trusthub-pending-role", "buyer");
+        writeClientText("trusthub-pending-role", "buyer");
         addNotification({
           title: "Verify your email",
           message: "Enter the OTP sent to your email address to activate your buyer account."
@@ -738,7 +778,7 @@ const TrustHub = (() => {
 
         setUsers([...users, seller]);
         setCurrentUser(createSessionPayload(seller));
-        localStorage.setItem("trusthub-pending-role", "seller");
+        writeClientText("trusthub-pending-role", "seller");
         addNotification({
           title: "Complete seller verification",
           message: "Verify your email first, then your seller account will move to manual review."
@@ -767,8 +807,8 @@ const TrustHub = (() => {
         return createApiSuccess(sessionUser, "Signed in successfully.");
       },
       async logout() {
-        localStorage.removeItem("trusthub-current-user");
-        localStorage.removeItem("trusthub-pending-role");
+        removeClientState("trusthub-current-user");
+        removeClientState("trusthub-pending-role");
         return createApiSuccess(null, "Signed out.");
       },
       async getSession() {
@@ -803,7 +843,7 @@ const TrustHub = (() => {
           return createApiError("Unable to update verification status.", "VERIFY_FAILED");
         }
 
-        localStorage.removeItem("trusthub-pending-role");
+        removeClientState("trusthub-pending-role");
         addNotification({
           title: user.role === "seller" ? "Seller review started" : "Account verified",
           message: user.role === "seller"
@@ -922,7 +962,7 @@ const TrustHub = (() => {
 
         const user = session.data;
         const activeRole = safeString(role) || user.role;
-        const orders = safeParse(localStorage.getItem("trusthub-orders"), []).filter((order) => {
+        const orders = readClientState("trusthub-orders", []).filter((order) => {
           if (activeRole === "seller") {
             return [order.sellerEmail, order.sellerUsername, order.seller]
               .map((value) => normalize(value))
@@ -936,14 +976,15 @@ const TrustHub = (() => {
 
         return createApiSuccess(orders);
       },
-      async createFromCart(payload) {
+      async createFromCart(payload = {}) {
         const session = await requireAuthenticatedUser("buyer");
         if (!session.ok) {
           return session;
         }
 
         const buyer = session.data;
-        const cartSummary = getCartSummary(getCartItems(), payload.selectedAddress);
+        const fulfillmentMethod = normalize(payload.fulfillmentMethod) === "pickup" ? "pickup" : "delivery";
+        const cartSummary = getCartSummary(getCartItems(), payload.selectedAddress, fulfillmentMethod);
         if (!cartSummary.items.length) {
           return createApiError("Your cart is empty.", "EMPTY_CART");
         }
@@ -956,7 +997,8 @@ const TrustHub = (() => {
           month: "short",
           year: "numeric"
         }).format(new Date(createdAt));
-        const existingOrders = safeParse(localStorage.getItem("trusthub-orders"), []);
+        const existingOrders = readClientState("trusthub-orders", []);
+        const subtotal = Number(cartSummary.subtotal) || 0;
 
         const newOrders = cartSummary.items.map((item, index) => ({
           id: `THA-${Date.now() + index}`,
@@ -977,16 +1019,22 @@ const TrustHub = (() => {
           date: readableDate,
           createdAt,
           amount: (Number(item.price) || 0) * (Number(item.quantity) || 1),
+          buyerTotal: ((Number(item.price) || 0) * (Number(item.quantity) || 1)) +
+            (subtotal ? Math.round(cartSummary.serviceFee * (((Number(item.price) || 0) * (Number(item.quantity) || 1)) / subtotal)) : 0) +
+            (index === 0 ? cartSummary.deliveryFee : 0),
+          trustHubCharge: subtotal ? Math.round(cartSummary.serviceFee * (((Number(item.price) || 0) * (Number(item.quantity) || 1)) / subtotal)) : 0,
+          trustHubChargeRate: cartSummary.serviceRate,
           quantity: Number(item.quantity) || 1,
           image: item.image || "logo.png",
+          fulfillmentMethod: cartSummary.fulfillmentMethod,
           deliveryAddressId: payload.selectedAddress && payload.selectedAddress.id ? payload.selectedAddress.id : "",
           deliveryAddressLabel: payload.selectedAddress
             ? `${payload.selectedAddress.label}: ${payload.selectedAddress.line1}, ${payload.selectedAddress.city}`
-            : "",
+            : "Buyer pickup",
           deliveryFee: cartSummary.deliveryFee
         }));
 
-        localStorage.setItem("trusthub-orders", JSON.stringify([...newOrders, ...existingOrders]));
+        writeClientState("trusthub-orders", [...newOrders, ...existingOrders]);
         setCartItems([]);
         addNotification({
           title: "Order placed",
@@ -1199,6 +1247,11 @@ const TrustHub = (() => {
     safeParse,
     safeString,
     normalize,
+    readClientState,
+    writeClientState,
+    readClientText,
+    writeClientText,
+    removeClientState,
     getUsers,
     setUsers,
     getCurrentUser,
@@ -1237,6 +1290,7 @@ const TrustHub = (() => {
     getCartSummary,
     getOrderTimeline,
     findProductByIdOrSlug,
+    getServiceChargeRate,
     getAddresses,
     setAddresses,
     getNotifications,
@@ -1317,6 +1371,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   requestAnimationFrame(() => {
+    initSiteSectionAnimations();
     document.body.classList.add("th-page-ready");
     hideGlobalLoader();
   });
@@ -1441,6 +1496,16 @@ function injectGlobalPolishStyles() {
       transform: translateY(-3px);
       box-shadow: 0 18px 36px rgba(11, 31, 58, 0.12);
     }
+    .th-reveal {
+      opacity: 0;
+      transform: translateY(22px) scale(0.985);
+      transition: opacity 0.68s ease, transform 0.68s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--th-reveal-delay, 0s);
+    }
+    .th-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
     body.th-page-leaving .th-global-loader {
       opacity: 1;
       visibility: visible;
@@ -1475,7 +1540,8 @@ function injectGlobalPolishStyles() {
       .support-action,
       .order-row,
       .product-card,
-      .mobile-nav a {
+      .mobile-nav a,
+      .th-reveal {
         transition: none !important;
       }
       .th-global-loader-spinner {
@@ -1612,26 +1678,75 @@ function markActiveNavigation() {
   });
 }
 
+function initSiteSectionAnimations(scope = document) {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const targets = Array.from(scope.querySelectorAll([
+    ".th-page-header",
+    ".th-panel",
+    ".th-auth-card",
+    ".th-admin-stat",
+    ".th-admin-item",
+    ".th-admin-log",
+    ".th-cart-item",
+    ".th-radio-card",
+    ".th-empty-state",
+    ".section-head",
+    ".trust-strip-card",
+    ".start-card",
+    ".info-card",
+    ".step-card",
+    ".category-card",
+    ".product-card",
+    ".content-panel",
+    ".support-panel",
+    ".cta-wrap"
+  ].join(","))).filter((element) => {
+    return !element.closest(".site-header") && !element.closest(".site-footer") && element.dataset.thRevealReady !== "true";
+  });
+
+  if (!targets.length) {
+    return;
+  }
+
+  targets.forEach((element, index) => {
+    element.dataset.thRevealReady = "true";
+    element.classList.add("th-reveal");
+    element.style.setProperty("--th-reveal-delay", `${Math.min(index % 8, 7) * 0.045}s`);
+  });
+
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    targets.forEach((element) => element.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, activeObserver) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) {
+        return;
+      }
+
+      entry.target.classList.add("is-visible");
+      activeObserver.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.16,
+    rootMargin: "0px 0px -6% 0px"
+  });
+
+  targets.forEach((element) => observer.observe(element));
+}
+
 function initThemeAndMenu() {
-  const root = document.documentElement;
-  const themeToggle = document.querySelector(".theme-toggle");
+  const themeToggles = document.querySelectorAll(".theme-toggle");
   const menuToggle = document.querySelector(".menu-toggle");
   const mainNav = document.querySelector(".main-nav");
   const navLinks = document.querySelectorAll(".nav-list a");
-  const savedTheme = getPreferredTheme();
 
-  applyTheme(savedTheme);
-
-  if (themeToggle) {
-    themeToggle.setAttribute("aria-pressed", savedTheme === "dark" ? "true" : "false");
-    themeToggle.addEventListener("click", () => {
-      const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
-      const next = current === "dark" ? "light" : "dark";
-      applyTheme(next);
-      localStorage.setItem("trusthub-theme", next);
-      themeToggle.setAttribute("aria-pressed", next === "dark" ? "true" : "false");
-    });
-  }
+  applyTheme("light");
+  themeToggles.forEach((toggle) => {
+    toggle.hidden = true;
+    toggle.setAttribute("aria-hidden", "true");
+  });
 
   const closeMenu = () => {
     if (!mainNav || !menuToggle) {
@@ -1712,7 +1827,7 @@ function applyRouteGuard() {
 
   const currentUser = TrustHub.getActiveUser();
   if (!currentUser.role) {
-    localStorage.setItem("trusthub-post-login-redirect", window.location.pathname.split("/").pop() || "index.html");
+    TrustHub.writeClientText("trusthub-post-login-redirect", window.location.pathname.split("/").pop() || "index.html");
     window.location.href = "login.html";
     return false;
   }
@@ -2426,7 +2541,7 @@ function initSellerSignup() {
     if (!TrustHub.safeString(verificationDetails.value)) {
       valid = false;
       if (showErrors) {
-        setInputError("seller-verification-details", "ID / Verification Details are required.");
+        setInputError("seller-verification-details", "Business Name is required.");
       }
     } else {
       setInputError("seller-verification-details", "");
@@ -2475,9 +2590,7 @@ function initSellerSignup() {
       school: TrustHub.safeString(school.value) === "Others"
         ? TrustHub.safeString(schoolOther.value)
         : TrustHub.safeString(school.value),
-      businessName: TrustHub.safeString(school.value) === "Others"
-        ? TrustHub.safeString(schoolOther.value)
-        : "",
+      businessName: TrustHub.safeString(verificationDetails.value),
       whatYouSell: TrustHub.safeString(whatYouSell.value),
       productCategory: productCategorySelect.getValues(),
       location: TrustHub.safeString(location.value),
@@ -2612,15 +2725,15 @@ function initLogin() {
     const user = response.data;
     const verificationPending = !user.verificationMetadata.emailVerifiedAt &&
       TrustHub.normalize(user.verificationStatus).includes("pending email");
-    const redirectTarget = localStorage.getItem("trusthub-post-login-redirect");
+    const redirectTarget = TrustHub.readClientText("trusthub-post-login-redirect");
 
     if (verificationPending) {
-      localStorage.setItem("trusthub-pending-role", user.role);
+      TrustHub.writeClientText("trusthub-pending-role", user.role);
       window.location.href = "verify.html";
       return;
     }
 
-    localStorage.removeItem("trusthub-post-login-redirect");
+    TrustHub.removeClientState("trusthub-post-login-redirect");
     window.location.href = redirectTarget && redirectTarget !== "login.html"
       ? redirectTarget
       : TrustHub.getDashboardDestination(user.role);
@@ -2909,7 +3022,7 @@ function initAdminDashboard() {
   const activeAdminName = document.getElementById("admin-active-name");
 
   function getOrderData() {
-    return TrustHub.safeParse(localStorage.getItem("trusthub-orders"), []).filter(Boolean);
+    return TrustHub.readClientState("trusthub-orders", []).filter(Boolean);
   }
 
   function getVerificationQueue(users) {
@@ -2957,7 +3070,7 @@ function initAdminDashboard() {
           <strong>${user.fullName || "Seller account"}</strong>
           <span>${user.email || "No email"} | ${user.location || "Enugu"}</span>
           <span>${TrustHub.getVerificationStatus(user)}</span>
-          <small>${user.verificationDetails || "No verification note yet."}</small>
+          <small>${user.businessName || user.verificationDetails || "No business name yet."}</small>
         </div>
         <div class="th-admin-actions">
           <button type="button" class="btn btn-primary" data-admin-action="verify-user" data-user-role="${user.role}" data-user-email="${user.email || ""}">Verify</button>
@@ -3071,8 +3184,8 @@ function initAdminDashboard() {
         <div class="th-admin-item-copy">
           <strong>${order.id || "Order"}</strong>
           <span>${order.product || "Marketplace item"} | ${order.seller || "Seller"}</span>
-          <span>${order.status || "Pending"} | ${order.paymentStatus || "Pending payment"}</span>
-          <small>${order.buyer || "Buyer"} | ${TrustHub.formatCurrency(order.amount || 0)} | ${order.date || "No date"}</small>
+          <span>${order.status || "Pending"} | ${order.paymentStatus || "Pending payment"} | ${order.fulfillmentMethod === "pickup" ? "Pickup" : "Delivery"}</span>
+          <small>${order.buyer || "Buyer"} | Buyer total ${TrustHub.formatCurrency(order.buyerTotal || order.amount || 0)} | Charge ${TrustHub.formatCurrency(order.trustHubCharge || 0)} | ${order.date || "No date"}</small>
         </div>
       </article>
     `).join("");
@@ -3214,7 +3327,7 @@ function initAdminDashboard() {
 
   logoutButton?.addEventListener("click", () => {
     TrustHub.addAdminLog("Admin logout", `${currentUser.fullName || currentUser.email} signed out of the admin panel.`, currentUser);
-    localStorage.removeItem("trusthub-current-user");
+    TrustHub.removeClientState("trusthub-current-user");
     window.location.href = "admin-login.html";
   });
 
@@ -3235,10 +3348,10 @@ function initCart() {
     return;
   }
 
-  let items = TrustHub.safeParse(localStorage.getItem("trusthub-cart"), []);
+  let items = TrustHub.getCartItems();
 
   function save() {
-    localStorage.setItem("trusthub-cart", JSON.stringify(items));
+    TrustHub.setCartItems(items);
   }
 
   function render() {
@@ -3276,13 +3389,11 @@ function initCart() {
       `).join("");
     }
 
-    const subtotalValue = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
-    const deliveryValue = hasItems ? 1500 : 0;
-    const serviceValue = hasItems ? Math.round(subtotalValue * 0.025) : 0;
-    subtotal.textContent = TrustHub.formatCurrency(subtotalValue);
-    delivery.textContent = TrustHub.formatCurrency(deliveryValue);
-    service.textContent = TrustHub.formatCurrency(serviceValue);
-    total.textContent = TrustHub.formatCurrency(subtotalValue + deliveryValue + serviceValue);
+    const summary = TrustHub.getCartSummary(items);
+    subtotal.textContent = TrustHub.formatCurrency(summary.subtotal);
+    delivery.textContent = TrustHub.formatCurrency(summary.deliveryFee);
+    service.textContent = TrustHub.formatCurrency(summary.serviceFee);
+    total.textContent = TrustHub.formatCurrency(summary.total);
     checkoutButton.classList.toggle("is-disabled", !hasItems);
     checkoutButton.setAttribute("aria-disabled", hasItems ? "false" : "true");
   }
@@ -3349,7 +3460,7 @@ function initOrders() {
   const headerCopy = document.querySelector(".th-page-header p");
   const tableHead = Array.from(document.querySelectorAll(".th-order-table-head span"));
   const role = currentUser.role === "seller" ? "seller" : "buyer";
-  const allOrders = TrustHub.safeParse(localStorage.getItem("trusthub-orders"), []).filter((order) => {
+  const allOrders = TrustHub.readClientState("trusthub-orders", []).filter((order) => {
     if (role === "seller") {
       return [order.sellerEmail, order.sellerUsername, order.seller]
         .map((value) => TrustHub.normalize(value))
@@ -3428,7 +3539,7 @@ function initOrders() {
       : (order.seller || "Verified Seller");
     detailTitle.textContent = `${order.product || "Order"} | ${order.id || "THA-0000"}`;
     detailMeta.textContent = `${counterparty} | ${order.date || "-"} | ${order.status || "Pending"}${order.paymentStatus ? ` | ${order.paymentStatus}` : ""}`;
-    detailAmount.textContent = TrustHub.formatCurrency(order.amount || 0);
+    detailAmount.textContent = TrustHub.formatCurrency(order.buyerTotal || order.amount || 0);
     renderTimeline(order);
   }
 
@@ -3454,7 +3565,7 @@ function initOrders() {
           <span>${role === "seller" ? (order.buyer || order.buyerEmail || "Buyer") : (order.seller || "Verified Seller")}</span>
         <span><span class="th-status-badge">${order.status || "Pending"}</span></span>
         <span>${order.date || "-"}</span>
-        <strong>${TrustHub.formatCurrency(order.amount || 0)}</strong>
+        <strong>${TrustHub.formatCurrency(order.buyerTotal || order.amount || 0)}</strong>
       </button>
     `).join("");
 
@@ -3992,7 +4103,7 @@ function initProduct() {
     productHero.textContent = "";
   }
 
-  const sellerBadge = product.isPro ? "Pro Seller" : "Verified Seller";
+  const sellerBadge = "Verified Seller";
   const trustBadge = TrustHub.safeString(product.verificationStatus) || "Trusted Listing";
   productName.textContent = product.name || "Marketplace product";
   productSeller.textContent = `${product.sellerName || product.seller || "Verified Seller"} | ${sellerBadge}`;
@@ -4014,7 +4125,7 @@ function initProduct() {
 
   buyNowButton.addEventListener("click", () => {
     if (!activeUser.role) {
-      localStorage.setItem("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(product.id)}&slug=${encodeURIComponent(product.slug || TrustHub.slugify(product.name))}`);
+      TrustHub.writeClientText("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(product.id)}&slug=${encodeURIComponent(product.slug || TrustHub.slugify(product.name))}`);
       window.location.href = "login.html";
       return;
     }
@@ -4031,7 +4142,7 @@ function initProduct() {
 
   saveItemButton.addEventListener("click", () => {
     if (!activeUser.role) {
-      localStorage.setItem("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(product.id)}&slug=${encodeURIComponent(product.slug || TrustHub.slugify(product.name))}`);
+      TrustHub.writeClientText("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(product.id)}&slug=${encodeURIComponent(product.slug || TrustHub.slugify(product.name))}`);
       window.location.href = "login.html";
       return;
     }
@@ -4055,7 +4166,7 @@ function initProduct() {
           <h3>${item.name}</h3>
           <p class="price">${TrustHub.formatCurrency(item.price)}</p>
           <p class="meta">Seller: ${item.sellerName}</p>
-          <p class="meta">${item.category || "Marketplace"} | ${item.isPro ? "Pro Seller" : "Verified Seller"}</p>
+          <p class="meta">${item.category || "Marketplace"} | Verified Seller</p>
           <p class="rating">${Number(item.rating || 4.8).toFixed(1)} <span>&#9733;&#9733;&#9733;&#9733;&#9733;</span></p>
         </div>
         <div class="product-card-actions">
@@ -4098,7 +4209,7 @@ function initProduct() {
 
     if (action === "cart") {
       if (!activeUser.role) {
-        localStorage.setItem("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(relatedProduct.id)}&slug=${encodeURIComponent(relatedProduct.slug || TrustHub.slugify(relatedProduct.name))}`);
+        TrustHub.writeClientText("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(relatedProduct.id)}&slug=${encodeURIComponent(relatedProduct.slug || TrustHub.slugify(relatedProduct.name))}`);
         window.location.href = "login.html";
         return;
       }
@@ -4131,15 +4242,39 @@ function initCheckout() {
   const addressForm = document.getElementById("checkout-address-form");
   const successPanel = document.getElementById("checkout-success");
   const paymentFields = document.getElementById("checkout-card-fields");
+  const fulfillmentChoice = document.getElementById("checkout-fulfillment-choice");
+  const addressPanel = document.getElementById("checkout-address-panel");
+  const addressCopy = document.getElementById("checkout-address-copy");
+  const chargeNote = document.getElementById("checkout-charge-note");
 
   if (!form || !orderItems) {
     return;
   }
 
   let selectedAddress = null;
+  let selectedFulfillment = "delivery";
+
+  function getSelectedFulfillment() {
+    const selectedInput = fulfillmentChoice?.querySelector('input[name="fulfillmentMethod"]:checked');
+    return selectedInput && selectedInput.value === "pickup" ? "pickup" : "delivery";
+  }
 
   function renderSummary() {
-    const summary = TrustHub.getCartSummary(TrustHub.getCartItems(), selectedAddress);
+    selectedFulfillment = getSelectedFulfillment();
+    const summary = TrustHub.getCartSummary(TrustHub.getCartItems(), selectedAddress, selectedFulfillment);
+    const requiresAddress = selectedFulfillment === "delivery";
+
+    if (addressPanel) {
+      addressPanel.hidden = !requiresAddress;
+      addressPanel.classList.toggle("is-muted", !requiresAddress);
+    }
+
+    if (addressCopy) {
+      addressCopy.textContent = requiresAddress
+        ? "Choose from saved addresses or create a new one for this order."
+        : "Pickup selected. You can skip delivery address and continue to payment.";
+    }
+
     if (!summary.items.length) {
       orderItems.innerHTML = `
         <div class="order-item">
@@ -4156,12 +4291,18 @@ function initCheckout() {
           <span>${TrustHub.formatCurrency((Number(item.price) || 0) * (Number(item.quantity) || 1))}</span>
         </div>
       `).join("");
-      payNowButton.disabled = !selectedAddress;
+      payNowButton.disabled = requiresAddress && !selectedAddress;
     }
 
     delivery.textContent = TrustHub.formatCurrency(summary.deliveryFee);
     service.textContent = TrustHub.formatCurrency(summary.serviceFee);
     total.textContent = TrustHub.formatCurrency(summary.total);
+
+    if (chargeNote) {
+      chargeNote.textContent = summary.subtotal
+        ? `TrustHub charge: ${Math.round(summary.serviceRate * 100)}% of ${TrustHub.formatCurrency(summary.subtotal)}.`
+        : "The TrustHub charge is calculated from your order subtotal.";
+    }
   }
 
   function renderAddresses() {
@@ -4202,6 +4343,14 @@ function initCheckout() {
         : "Paystack redirect or wallet flows can plug into this payment section later.";
   });
 
+  fulfillmentChoice?.addEventListener("change", () => {
+    selectedFulfillment = getSelectedFulfillment();
+    helper.textContent = selectedFulfillment === "pickup"
+      ? "Pickup selected. Confirm your payment method to place the order."
+      : "Delivery selected. Choose or save a delivery address before payment.";
+    renderSummary();
+  });
+
   addressList?.addEventListener("change", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLInputElement)) {
@@ -4239,7 +4388,9 @@ function initCheckout() {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!selectedAddress) {
+    selectedFulfillment = getSelectedFulfillment();
+
+    if (selectedFulfillment === "delivery" && !selectedAddress) {
       helper.textContent = "Select or add a delivery address before placing the order.";
       return;
     }
@@ -4254,7 +4405,8 @@ function initCheckout() {
 
     const response = await TrustHub.services.order.createFromCart({
       paymentMethod: paymentMethod.value,
-      selectedAddress
+      selectedAddress: selectedFulfillment === "delivery" ? selectedAddress : null,
+      fulfillmentMethod: selectedFulfillment
     });
 
     if (!response.ok) {

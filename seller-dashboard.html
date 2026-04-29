@@ -1001,8 +1001,8 @@
         <a class="sidebar-link" href="#orders">Orders</a>
         <a class="sidebar-link" href="#earnings">Earnings</a>
         <a class="sidebar-link" href="#trust-score">Trust Score</a>
-        <a class="sidebar-link" href="#ai-assistant">AI Assistant</a>
-        <a class="sidebar-link" href="#pro">Pro</a>
+        <a class="sidebar-link" href="#ai-assistant">Seller Helper</a>
+        <a class="sidebar-link" href="#pro">Seller Growth</a>
       </nav>
 
       <div class="sidebar-actions">
@@ -1010,7 +1010,7 @@
         <button class="btn btn-outline" onclick="document.getElementById('orders').scrollIntoView({ behavior: 'smooth' });">View Orders</button>
         <button class="btn btn-outline" onclick="document.getElementById('earnings').scrollIntoView({ behavior: 'smooth' });">View Earnings</button>
         <button class="btn btn-outline" onclick="document.getElementById('shop-overview').scrollIntoView({ behavior: 'smooth' });">Manage Shop</button>
-        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">Upgrade to Pro</button>
+        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">Boost Visibility</button>
       </div>
 
       <p class="sidebar-note">Secure seller tools built for serious marketplace operations. Keep your catalog updated and deliver consistently to protect your trust score.</p>
@@ -1062,8 +1062,8 @@
         <a href="#orders">Orders</a>
         <a href="#earnings">Earnings</a>
         <a href="#trust-score">Trust Score</a>
-        <a href="#ai-assistant">AI</a>
-        <a href="#pro">Pro</a>
+        <a href="#ai-assistant">Help</a>
+        <a href="#pro">Growth</a>
       </nav>
 
       <main class="content">
@@ -1350,10 +1350,10 @@
           </div>
         </section>
 
-        <section class="section-card" id="ai-assistant" aria-label="AI Assistant">
+        <section class="section-card" id="ai-assistant" aria-label="Seller Helper">
           <div class="section-head">
             <div>
-              <h2>AI Assistant Section</h2>
+              <h2>Seller Helper</h2>
               <p>Small help box for faster seller decisions.</p>
             </div>
           </div>
@@ -1376,25 +1376,25 @@
               <button class="btn btn-outline" id="assistant-clear-btn" type="button">Clear</button>
             </div>
 
-            <div class="assistant-output" id="assistant-output">Use the AI Assistant to improve listing quality, price smartly, and reply quickly to customers.</div>
+            <div class="assistant-output" id="assistant-output">Use Seller Helper for listing ideas, pricing guidance, and quick customer replies.</div>
           </div>
         </section>
 
-        <section class="section-card" id="pro" aria-label="Pro Section">
+        <section class="section-card" id="pro" aria-label="Seller Growth">
           <div class="section-head">
             <div>
-              <h2>Pro Section</h2>
-              <p>Upgrade card with benefits and highlights.</p>
+              <h2>Seller Growth</h2>
+              <p>Extra visibility and performance perks for active sellers.</p>
             </div>
             <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
-              <span class="status-pill" id="pro-status-pill">Standard Plan</span>
-              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">Upgrade to Pro</button>
+              <span class="status-pill" id="pro-status-pill">Growth Ready</span>
+              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">Boost Visibility</button>
             </div>
           </div>
 
           <div class="pro-grid">
             <article class="benefits">
-              <h3>Benefits List</h3>
+              <h3>Growth Benefits</h3>
               <ul>
                 <li>Priority listing visibility across high-intent buyers.</li>
                 <li>Lower payout processing time for completed orders.</li>
@@ -1404,7 +1404,7 @@
             </article>
 
             <article class="highlights">
-              <h3>Feature Highlights</h3>
+              <h3>Growth Highlights</h3>
               <ul>
                 <li>Automated pricing guidance based on market activity.</li>
                 <li>Bulk product tools for faster catalog updates.</li>
@@ -1681,9 +1681,7 @@
       function renderProfile() {
         const shopName = getSellerName();
         const ageValue = sellerProfile.age ? `${sellerProfile.age} years` : "Not provided";
-        const verificationText = isProSeller
-          ? `${getVerificationStatus()} | Pro Seller`
-          : getVerificationStatus();
+        const verificationText = getVerificationStatus();
 
         overviewShopName.textContent = shopName;
         headerShopName.textContent = `Shop: ${shopName}`;
@@ -1920,10 +1918,10 @@
       sidebarAddProductButton.addEventListener("click", scrollToAddProduct);
 
       function updateProUI() {
-        proStatusPill.textContent = isProSeller ? "Pro Seller Active" : "Standard Plan";
-        upgradeProButton.textContent = isProSeller ? "Pro Enabled" : "Upgrade to Pro";
+        proStatusPill.textContent = isProSeller ? "Visibility Boost Active" : "Growth Ready";
+        upgradeProButton.textContent = isProSeller ? "Boost Active" : "Boost Visibility";
         upgradeProButton.disabled = isProSeller;
-        sidebarUpgradeButton.textContent = isProSeller ? "Pro Enabled" : "Upgrade to Pro";
+        sidebarUpgradeButton.textContent = isProSeller ? "Boost Active" : "Boost Visibility";
       }
 
       function activatePro() {
@@ -1935,7 +1933,7 @@
         updateProUI();
         renderProfile();
         renderStats();
-        assistantOutput.textContent = "Pro is now active for your shop. Your listings are marked as Pro Seller and your payout rate has been updated.";
+        assistantOutput.textContent = "Visibility boost is now active for your shop. Your listings can receive extra exposure and your payout rate has been updated.";
       }
 
       function generateAssistantResponse(type, question) {
@@ -1987,14 +1985,14 @@
           }
         }
 
-        assistantOutput.textContent = message || "Use the AI Assistant to improve listing quality, price smartly, and reply quickly to customers.";
+        assistantOutput.textContent = message || "Use Seller Helper for listing ideas, pricing guidance, and quick customer replies.";
         return assistantOutput.textContent;
       }
 
       function handleUpgradeClick() {
         if (isProSeller) {
           document.getElementById("pro").scrollIntoView({ behavior: "smooth" });
-          assistantOutput.textContent = "Your Pro features are already active. You can use this section to review the benefits anytime.";
+          assistantOutput.textContent = "Your visibility boost is already active. You can use this section to review the benefits anytime.";
           return;
         }
 
@@ -2110,7 +2108,7 @@
 
       assistantClearButton.addEventListener("click", () => {
         assistantInput.value = "";
-        assistantOutput.textContent = "Use the AI Assistant to improve listing quality, price smartly, and reply quickly to customers.";
+        assistantOutput.textContent = "Use Seller Helper for listing ideas, pricing guidance, and quick customer replies.";
       });
 
       assistantInput.addEventListener("keydown", (event) => {

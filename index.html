@@ -27,7 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-page="home">
   <header class="site-header" id="top">
     <div class="container nav-wrap">
       <a href="index.html" class="brand" aria-label="TrustHub Africa home">
@@ -80,11 +80,11 @@
         <div class="hero-panel" aria-hidden="true">
           <div class="hero-panel__card">
             <p class="hero-panel__title">Trust Score</p>
-            <p class="hero-panel__value">98.4%</p>
+            <p class="hero-panel__value" data-count-to="98.4" data-duration="3400" data-decimals="1" data-suffix="%">0.0%</p>
           </div>
           <div class="hero-panel__card">
             <p class="hero-panel__title">Verified Traders</p>
-            <p class="hero-panel__value">12k+</p>
+            <p class="hero-panel__value" data-count-to="12000" data-duration="3600" data-format="compact" data-suffix="+">0+</p>
           </div>
           <div class="hero-panel__card">
             <p class="hero-panel__title">Protected Transactions</p>
@@ -282,7 +282,7 @@
         <div class="content-panel support-panel">
           <p>Chat with us directly or reach out anytime. We're here to support you.</p>
           <div class="support-actions">
-            <a class="btn btn-primary" href="https://wa.me/2347017509585?text=Hello%20TrustHub%20Africa%2C%20I%20need%20support" target="_blank" rel="noopener">Chat on WhatsApp</a>
+            <a class="btn btn-primary home-whatsapp-btn" href="https://wa.me/2347017509585?text=Hello%20TrustHub%20Africa%2C%20I%20need%20support" target="_blank" rel="noopener">Chat on WhatsApp</a>
             <a class="btn btn-outline" href="contact.html">Contact Us</a>
           </div>
         </div>
@@ -343,8 +343,124 @@
       const categoryFilter = document.getElementById("market-category");
       const marketGrid = document.getElementById("home-market-grid");
       const marketStatus = document.getElementById("home-market-status");
+      const heroPanel = document.querySelector(".hero-panel");
+      const statCounters = Array.from(document.querySelectorAll("[data-count-to]"));
       const allProducts = window.TrustHub ? TrustHub.getMarketplaceProducts() : [];
       let filteredProducts = allProducts.slice();
+      let revealObserver = null;
+      let countersStarted = false;
+
+      function formatCounterValue(value, element) {
+        const format = element.dataset.format || "number";
+        const decimals = Number(element.dataset.decimals || 0);
+        const suffix = element.dataset.suffix || "";
+        let output = "";
+
+        if (format === "compact") {
+          output = new Intl.NumberFormat("en", {
+            notation: "compact",
+            maximumFractionDigits: value >= 10000 ? 0 : 1
+          }).format(value).replace("k", "K");
+        } else if (decimals > 0) {
+          output = value.toFixed(decimals);
+        } else {
+          output = String(Math.round(value));
+        }
+
+        return `${output}${suffix}`;
+      }
+
+      function animateCounter(element) {
+        const target = Number(element.dataset.countTo || 0);
+        const duration = Number(element.dataset.duration || 3200);
+        const startTime = performance.now();
+
+        function updateFrame(now) {
+          const progress = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const currentValue = progress === 1 ? target : target * eased;
+          element.textContent = formatCounterValue(currentValue, element);
+
+          if (progress < 1) {
+            requestAnimationFrame(updateFrame);
+          }
+        }
+
+        requestAnimationFrame(updateFrame);
+      }
+
+      function startCounters() {
+        if (countersStarted) {
+          return;
+        }
+
+        countersStarted = true;
+        statCounters.forEach((counter) => animateCounter(counter));
+      }
+
+      function initCounters() {
+        if (!heroPanel || !statCounters.length) {
+          return;
+        }
+
+        if (!("IntersectionObserver" in window)) {
+          startCounters();
+          return;
+        }
+
+        const counterObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            startCounters();
+            observer.disconnect();
+          });
+        }, { threshold: 0.45 });
+
+        counterObserver.observe(heroPanel);
+      }
+
+      function primeRevealAnimations(scope = document) {
+        const targets = scope.querySelectorAll(".search-form, .trust-strip-card, .start-card, .info-card, .step-card, .category-card, .product-card, .content-panel, .support-panel, .cta-wrap");
+
+        targets.forEach((element, index) => {
+          if (element.dataset.revealReady === "true") {
+            return;
+          }
+
+          element.dataset.revealReady = "true";
+          element.classList.add("reveal-on-scroll");
+          element.style.setProperty("--reveal-delay", `${(index % 6) * 0.06}s`);
+
+          if (revealObserver) {
+            revealObserver.observe(element);
+          } else {
+            element.classList.add("is-visible");
+          }
+        });
+      }
+
+      function initRevealAnimations() {
+        if ("IntersectionObserver" in window) {
+          revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) {
+                return;
+              }
+
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            });
+          }, {
+            threshold: 0.18,
+            rootMargin: "0px 0px -8% 0px"
+          });
+        }
+
+        primeRevealAnimations();
+      }
 
       function openProduct(product) {
         TrustHub.setSelectedProduct(product);
@@ -360,7 +476,7 @@
                 <p>Try a different search or category, or wait for more sellers to upload listings.</p>
               </div>
               <div class="product-card-actions">
-                <a href="buyer-signup.html" class="btn btn-primary">Start Shopping</a>
+                <a href="buyer-signup.html" class="btn btn-primary home-shopping-btn">Start Shopping</a>
                 <a href="seller-signup.html" class="btn btn-outline">Become a Seller</a>
               </div>
             </article>
@@ -368,6 +484,7 @@
           marketStatus.textContent = allProducts.length
             ? "No products match your current search."
             : "No live products yet. Listings will appear as soon as sellers upload them.";
+          primeRevealAnimations(marketGrid);
           return;
         }
 
@@ -382,9 +499,9 @@
               <h3>${product.name}</h3>
               <p class="price">${TrustHub.formatCurrency(product.price)}</p>
               <p class="meta">Seller: ${product.sellerName}</p>
-              <p class="meta">${product.category || "Marketplace"} • ${product.isPro ? "Pro Seller" : "Verified Seller"}</p>
+              <p class="meta">${product.category || "Marketplace"} • Verified Seller</p>
               <p class="rating">${Number(product.rating || 4.8).toFixed(1)} <span>&#9733;</span></p>
-              <span class="trust-pill">${product.isPro ? "Pro Seller" : "Verified"}</span>
+              <span class="trust-pill">Verified Seller</span>
             </div>
             <div class="product-card-actions">
               <button class="btn btn-outline" type="button" data-home-action="view" data-product-id="${product.id}" data-seller-id="${product.sellerId}" aria-label="View details for ${product.name}">View Details</button>
@@ -392,6 +509,7 @@
             </div>
           </article>
         `).join("");
+        primeRevealAnimations(marketGrid);
       }
 
       function applyFilters() {
@@ -439,6 +557,8 @@
 
       searchInput.addEventListener("input", applyFilters);
       categoryFilter.addEventListener("change", applyFilters);
+      initRevealAnimations();
+      initCounters();
       renderProducts();
     });
   </script>
