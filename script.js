@@ -1036,6 +1036,36 @@ const TrustHub = (() => {
 
         writeClientState("trusthub-orders", [...newOrders, ...existingOrders]);
         setCartItems([]);
+        const sellers = getUsers().filter((user) => user.role === "seller");
+        newOrders.forEach((order) => {
+          const sellerUser = sellers.find((seller) => {
+            const sellerMarkers = [
+              seller.email,
+              seller.username,
+              seller.fullName,
+              seller.businessName,
+              seller.shopName
+            ].map((value) => normalize(value)).filter(Boolean);
+            const orderMarkers = [
+              order.sellerEmail,
+              order.sellerUsername,
+              order.seller
+            ].map((value) => normalize(value)).filter(Boolean);
+
+            return sellerMarkers.some((marker) => orderMarkers.includes(marker));
+          });
+
+          if (!sellerUser) {
+            return;
+          }
+
+          addNotification({
+            title: "New order received",
+            message: `${order.buyer || "A buyer"} ordered ${order.product || "a marketplace item"}. Check your orders to prepare fulfillment.`,
+            type: "info",
+            orderId: order.id
+          }, sellerUser);
+        });
         addNotification({
           title: "Order placed",
           message: `Your payment request has been created with reference ${paymentReference}.`,
@@ -1600,7 +1630,7 @@ function hideGlobalLoader() {
   }
 
   const elapsed = Date.now() - thLoaderCreatedAt;
-  const delay = Math.max(0, 180 - elapsed);
+  const delay = Math.max(0, 70 - elapsed);
   window.setTimeout(() => {
     thGlobalLoader.classList.add("is-hidden");
   }, delay);
@@ -1649,7 +1679,7 @@ function initPageTransitions() {
     document.body.classList.add("th-page-leaving");
     window.setTimeout(() => {
       window.location.href = url.href;
-    }, 120);
+    }, 35);
   });
 }
 
@@ -4048,7 +4078,7 @@ function initVerify() {
       window.location.href = response.data.role === "seller"
         ? "seller-dashboard.html"
         : "buyer-dashboard.html";
-    }, 1000);
+    }, 650);
   });
 
   updateTimerUI();

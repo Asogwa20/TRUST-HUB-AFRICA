@@ -829,6 +829,51 @@
         min-height: 74px;
         line-height: 1.5;
       }
+
+      .ai-plan-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.85rem;
+        margin-bottom: 1rem;
+      }
+
+      .ai-plan {
+        display: grid;
+        gap: 0.4rem;
+        min-height: 8.5rem;
+        padding: 1rem;
+        text-align: left;
+        border: 1px solid #DCE4EE;
+        border-radius: var(--radius-sm);
+        background: #FFFFFF;
+        color: #1F2937;
+        cursor: pointer;
+        transition: border-color var(--trans), box-shadow var(--trans), transform var(--trans);
+      }
+
+      .ai-plan:hover,
+      .ai-plan.is-selected {
+        border-color: #16A34A;
+        box-shadow: 0 12px 24px rgba(22, 163, 74, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .ai-plan span {
+        font-size: 0.78rem;
+        font-weight: 800;
+        color: #16A34A;
+        text-transform: uppercase;
+      }
+
+      .ai-plan strong {
+        font-size: 1.35rem;
+        color: #0B1F3A;
+      }
+
+      .ai-plan small {
+        color: #64748B;
+        line-height: 1.5;
+      }
   
       .pro-grid {
         display: grid;
@@ -962,6 +1007,7 @@
         .overview-grid,
         .status-grid,
         .earnings-grid,
+        .ai-plan-grid,
         .pro-grid,
         .trust-grid,
         .form-grid {
@@ -1001,8 +1047,8 @@
         <a class="sidebar-link" href="#orders">Orders</a>
         <a class="sidebar-link" href="#earnings">Earnings</a>
         <a class="sidebar-link" href="#trust-score">Trust Score</a>
-        <a class="sidebar-link" href="#ai-assistant">Seller Helper</a>
-        <a class="sidebar-link" href="#pro">Seller Growth</a>
+        <a class="sidebar-link" href="#ai-assistant">TrustHub AI</a>
+        <a class="sidebar-link" href="#pro">AI Access</a>
       </nav>
 
       <div class="sidebar-actions">
@@ -1010,7 +1056,7 @@
         <button class="btn btn-outline" onclick="document.getElementById('orders').scrollIntoView({ behavior: 'smooth' });">View Orders</button>
         <button class="btn btn-outline" onclick="document.getElementById('earnings').scrollIntoView({ behavior: 'smooth' });">View Earnings</button>
         <button class="btn btn-outline" onclick="document.getElementById('shop-overview').scrollIntoView({ behavior: 'smooth' });">Manage Shop</button>
-        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">Boost Visibility</button>
+        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">Unlock TrustHub AI</button>
       </div>
 
       <p class="sidebar-note">Secure seller tools built for serious marketplace operations. Keep your catalog updated and deliver consistently to protect your trust score.</p>
@@ -1062,8 +1108,8 @@
         <a href="#orders">Orders</a>
         <a href="#earnings">Earnings</a>
         <a href="#trust-score">Trust Score</a>
-        <a href="#ai-assistant">Help</a>
-        <a href="#pro">Growth</a>
+        <a href="#ai-assistant">AI</a>
+        <a href="#pro">AI Access</a>
       </nav>
 
       <main class="content">
@@ -1350,11 +1396,11 @@
           </div>
         </section>
 
-        <section class="section-card" id="ai-assistant" aria-label="Seller Helper">
+        <section class="section-card" id="ai-assistant" aria-label="TrustHub AI">
           <div class="section-head">
             <div>
-              <h2>Seller Helper</h2>
-              <p>Small help box for faster seller decisions.</p>
+              <h2>TrustHub AI</h2>
+              <p>Paid seller assistant for listings, pricing ideas, sales tips, and cleaner buyer replies.</p>
             </div>
           </div>
 
@@ -1372,44 +1418,62 @@
             </div>
 
             <div class="assistant-suggestions">
-              <button class="btn btn-primary" id="assistant-generate-btn" type="button">Generate Advice</button>
+              <button class="btn btn-primary" id="assistant-generate-btn" type="button">Use TrustHub AI</button>
               <button class="btn btn-outline" id="assistant-clear-btn" type="button">Clear</button>
             </div>
 
-            <div class="assistant-output" id="assistant-output">Use Seller Helper for listing ideas, pricing guidance, and quick customer replies.</div>
+            <div class="assistant-output" id="assistant-output">TrustHub AI is a paid seller tool. Unlock it to improve listings, pricing, and buyer replies.</div>
           </div>
         </section>
 
-        <section class="section-card" id="pro" aria-label="Seller Growth">
+        <section class="section-card" id="pro" aria-label="TrustHub AI Access">
           <div class="section-head">
             <div>
-              <h2>Seller Growth</h2>
-              <p>Extra visibility and performance perks for active sellers.</p>
+              <h2>TrustHub AI Access</h2>
+              <p>A paid assistant for serious sellers who want better listings and faster customer replies.</p>
             </div>
             <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
-              <span class="status-pill" id="pro-status-pill">Growth Ready</span>
-              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">Boost Visibility</button>
+              <span class="status-pill" id="pro-status-pill">AI Locked</span>
+              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">Pay for AI Access</button>
             </div>
+          </div>
+
+          <div class="ai-plan-grid" aria-label="TrustHub AI pricing plans">
+            <button class="ai-plan is-selected" type="button" data-ai-plan="week" data-ai-price="2000" data-ai-duration="7">
+              <span>1 Week</span>
+              <strong>NGN 2,000</strong>
+              <small>For trying TrustHub AI on a few listings.</small>
+            </button>
+            <button class="ai-plan" type="button" data-ai-plan="month" data-ai-price="5000" data-ai-duration="30">
+              <span>1 Month</span>
+              <strong>NGN 5,000</strong>
+              <small>Best for active sellers improving listings weekly.</small>
+            </button>
+            <button class="ai-plan" type="button" data-ai-plan="quarter" data-ai-price="20000" data-ai-duration="90">
+              <span>3 Months</span>
+              <strong>NGN 20,000</strong>
+              <small>For serious sellers who want longer AI access.</small>
+            </button>
           </div>
 
           <div class="pro-grid">
             <article class="benefits">
-              <h3>Growth Benefits</h3>
+              <h3>Paid AI Tools</h3>
               <ul>
-                <li>Priority listing visibility across high-intent buyers.</li>
-                <li>Lower payout processing time for completed orders.</li>
-                <li>Advanced product analytics and category trends.</li>
-                <li>Dedicated support for disputes and logistics issues.</li>
+                <li>Generate clearer product descriptions from your listing details.</li>
+                <li>Improve titles so buyers understand the product faster.</li>
+                <li>Get pricing ideas based on your current shop inventory.</li>
+                <li>Create professional replies for buyer questions and order updates.</li>
               </ul>
             </article>
 
             <article class="highlights">
-              <h3>Growth Highlights</h3>
+              <h3>Why It Is Paid</h3>
               <ul>
-                <li>Automated pricing guidance based on market activity.</li>
-                <li>Bulk product tools for faster catalog updates.</li>
-                <li>Stronger buyer trust badge and profile priority.</li>
-                <li>Smart reply templates for faster customer response.</li>
+                <li>TrustHub AI helps sellers save time and publish better listings.</li>
+                <li>AI access can later connect to Paystack subscription billing.</li>
+                <li>Buyer shopping stays simple with no buyer AI distractions.</li>
+                <li>Admin verification still controls trust and seller approval.</li>
               </ul>
             </article>
           </div>
@@ -1528,7 +1592,7 @@
         : { ...currentUser, role: "seller" };
       const sellerStorageId = normalize(sellerProfile.username || sellerProfile.email || "seller");
       const productStorageKey = `trusthub-seller-products-${sellerStorageId}`;
-      const proStorageKey = `trusthub-seller-pro-${sellerStorageId}`;
+      const aiStorageKey = `trusthub-seller-ai-${sellerStorageId}`;
 
       const demoNames = [
         "premium ankara tote bag",
@@ -1559,7 +1623,7 @@
           || markers.includes(normalize(sellerProfile.username));
       }
 
-      let isProSeller = Boolean(parseStorage(proStorageKey, sellerProfile.isPro || false));
+      let hasTrustHubAi = Boolean(parseStorage(aiStorageKey, sellerProfile.hasTrustHubAi || sellerProfile.isPro || false));
       let products = parseStorage(productStorageKey, [])
         .filter((product) => product && !isDemoProduct(product))
         .map((product) => {
@@ -1624,6 +1688,7 @@
       const sidebarUpgradeButton = document.getElementById("sidebar-upgrade-pro");
       const upgradeProButton = document.getElementById("upgrade-pro-btn");
       const proStatusPill = document.getElementById("pro-status-pill");
+      const aiPlanButtons = Array.from(document.querySelectorAll("[data-ai-plan]"));
 
       const searchInput = document.getElementById("dashboard-search");
       const assistantInput = document.getElementById("assistant-input");
@@ -1634,6 +1699,7 @@
       const maxProductImageSize = 2 * 1024 * 1024;
       const maxProductImageCount = 3;
       let selectedProductImages = [];
+      let selectedAiPlan = aiPlanButtons.find((button) => button.classList.contains("is-selected")) || aiPlanButtons[0] || null;
 
       function getSellerName() {
         return sellerProfile.shopName || sellerProfile.businessName || sellerProfile.school || sellerProfile.fullName || "Seller Shop";
@@ -1651,7 +1717,7 @@
       }
 
       function getRating() {
-        const base = Number(sellerProfile.rating || (isProSeller ? 5 : 4.8));
+        const base = Number(sellerProfile.rating || 4.8);
         return Number.isFinite(base) ? Math.max(0, Math.min(5, base)) : 4.8;
       }
 
@@ -1659,7 +1725,8 @@
         const nextProfile = {
           ...sellerProfile,
           role: "seller",
-          isPro: isProSeller,
+          hasTrustHubAi,
+          isPro: false,
           verificationStatus: getVerificationStatus(),
           rating: getRating()
         };
@@ -1874,7 +1941,7 @@
           return value === "completed" || value === "delivered";
         });
         const totalSales = successfulOrders.reduce((sum, order) => sum + (Number(order.amount) || 0), 0);
-        const totalEarnings = Math.round(totalSales * (isProSeller ? 0.9 : 0.82));
+        const totalEarnings = Math.round(totalSales * 0.82);
         const paidOut = payoutHistory.reduce((sum, payout) => sum + (Number(payout.amount) || 0), 0);
         const availableBalance = Math.max(0, totalEarnings - paidOut);
         const rating = getRating();
@@ -1904,7 +1971,7 @@
         trustDeliverySuccess.textContent = deliveryRate;
 
         const filledStars = Math.round(rating);
-        trustStars.textContent = `${filledStars}/5 trusted rating`;
+        trustStars.textContent = `${"★".repeat(filledStars)}${"☆".repeat(5 - filledStars)} ${rating.toFixed(1)}/5`;
       }
 
       function scrollToAddProduct() {
@@ -1917,23 +1984,49 @@
       addProductButton.addEventListener("click", scrollToAddProduct);
       sidebarAddProductButton.addEventListener("click", scrollToAddProduct);
 
+      function getSelectedAiPlan() {
+        const price = Number(selectedAiPlan?.dataset.aiPrice || 2000);
+        const duration = Number(selectedAiPlan?.dataset.aiDuration || 7);
+        const label = selectedAiPlan?.querySelector("span")?.textContent || "1 Week";
+        return {
+          id: selectedAiPlan?.dataset.aiPlan || "week",
+          label,
+          price,
+          duration
+        };
+      }
+
       function updateProUI() {
-        proStatusPill.textContent = isProSeller ? "Visibility Boost Active" : "Growth Ready";
-        upgradeProButton.textContent = isProSeller ? "Boost Active" : "Boost Visibility";
-        upgradeProButton.disabled = isProSeller;
-        sidebarUpgradeButton.textContent = isProSeller ? "Boost Active" : "Boost Visibility";
+        const plan = getSelectedAiPlan();
+        proStatusPill.textContent = hasTrustHubAi ? "AI Access Active" : "AI Locked";
+        upgradeProButton.textContent = hasTrustHubAi ? "AI Active" : `Pay ${currency.format(plan.price)}`;
+        upgradeProButton.disabled = hasTrustHubAi;
+        sidebarUpgradeButton.textContent = hasTrustHubAi ? "TrustHub AI Active" : "Unlock TrustHub AI";
       }
 
       function activatePro() {
-        isProSeller = true;
-        sellerProfile.isPro = true;
-        sellerProfile.rating = 5;
-        setStorage(proStorageKey, true);
+        const plan = getSelectedAiPlan();
+        const startedAt = new Date();
+        const expiresAt = new Date(startedAt.getTime() + plan.duration * 24 * 60 * 60 * 1000);
+        hasTrustHubAi = true;
+        sellerProfile.hasTrustHubAi = true;
+        sellerProfile.trustHubAiPlan = plan.id;
+        sellerProfile.trustHubAiExpiresAt = expiresAt.toISOString();
+        sellerProfile.isPro = false;
+        setStorage(aiStorageKey, {
+          active: true,
+          plan: plan.id,
+          label: plan.label,
+          price: plan.price,
+          duration: plan.duration,
+          startedAt: startedAt.toISOString(),
+          expiresAt: expiresAt.toISOString()
+        });
         syncSellerProfile();
         updateProUI();
         renderProfile();
         renderStats();
-        assistantOutput.textContent = "Visibility boost is now active for your shop. Your listings can receive extra exposure and your payout rate has been updated.";
+        assistantOutput.textContent = `TrustHub AI ${plan.label} access is now active. In the real product, this payment should be confirmed through Paystack before AI unlocks.`;
       }
 
       function generateAssistantResponse(type, question) {
@@ -1943,8 +2036,14 @@
         const recentOrder = orders[0] || null;
         let message = "";
 
+        if (!hasTrustHubAi) {
+          message = "TrustHub AI is a paid seller tool. Pay for AI access to generate product descriptions, pricing ideas, sales tips, and buyer reply suggestions.";
+          assistantOutput.textContent = message;
+          return message;
+        }
+
         if (!products.length && type !== "reply") {
-          message = "Upload your first product first. Once you publish a real listing, the assistant can help with pricing, descriptions, and sales advice based on your own inventory.";
+          message = "Upload your first product first. Once you publish a real listing, TrustHub AI can help with pricing, descriptions, and sales advice based on your own inventory.";
           assistantOutput.textContent = message;
           return message;
         }
@@ -1970,7 +2069,7 @@
         if (type === "custom") {
           const prompt = normalize(question);
           if (!prompt) {
-            message = "Ask about descriptions, pricing, sales tips, or customer replies, and I will use your actual shop data to guide the answer.";
+            message = "Ask about descriptions, pricing, sales tips, or customer replies, and TrustHub AI will use your actual shop data to guide the answer.";
           } else if (prompt.includes("price")) {
             message = generateAssistantResponse("pricing", "");
           } else if (prompt.includes("description") || prompt.includes("caption")) {
@@ -1985,14 +2084,14 @@
           }
         }
 
-        assistantOutput.textContent = message || "Use Seller Helper for listing ideas, pricing guidance, and quick customer replies.";
+        assistantOutput.textContent = message || "Use TrustHub AI for listing ideas, pricing guidance, and quick customer replies.";
         return assistantOutput.textContent;
       }
 
       function handleUpgradeClick() {
-        if (isProSeller) {
+        if (hasTrustHubAi) {
           document.getElementById("pro").scrollIntoView({ behavior: "smooth" });
-          assistantOutput.textContent = "Your visibility boost is already active. You can use this section to review the benefits anytime.";
+          assistantOutput.textContent = "TrustHub AI is already active. Use the AI section for listing ideas, pricing guidance, and buyer replies.";
           return;
         }
 
@@ -2001,6 +2100,20 @@
 
       upgradeProButton.addEventListener("click", handleUpgradeClick);
       sidebarUpgradeButton.addEventListener("click", handleUpgradeClick);
+      aiPlanButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (hasTrustHubAi) {
+            assistantOutput.textContent = "TrustHub AI is already active for this seller account.";
+            return;
+          }
+
+          selectedAiPlan = button;
+          aiPlanButtons.forEach((planButton) => {
+            planButton.classList.toggle("is-selected", planButton === button);
+          });
+          updateProUI();
+        });
+      });
       productImage.addEventListener("change", handleProductImageSelection);
 
       productForm.addEventListener("submit", async (event) => {
@@ -2108,7 +2221,9 @@
 
       assistantClearButton.addEventListener("click", () => {
         assistantInput.value = "";
-        assistantOutput.textContent = "Use Seller Helper for listing ideas, pricing guidance, and quick customer replies.";
+        assistantOutput.textContent = hasTrustHubAi
+          ? "Use TrustHub AI for listing ideas, pricing guidance, and quick customer replies."
+          : "TrustHub AI is a paid seller tool. Unlock it to improve listings, pricing, and buyer replies.";
       });
 
       assistantInput.addEventListener("keydown", (event) => {

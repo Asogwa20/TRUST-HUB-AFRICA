@@ -2128,6 +2128,30 @@
         window.location.href = "contact.html";
       });
 
+      const feedbackForm = document.querySelector(".feedback-form");
+      const feedbackTextarea = feedbackForm?.querySelector("textarea");
+      const feedbackButton = feedbackForm?.querySelector("button");
+
+      feedbackButton?.addEventListener("click", () => {
+        const message = safeString(feedbackTextarea?.value);
+        if (!message) {
+          showToast("Write your feedback before sending.");
+          return;
+        }
+
+        const feedbackKey = `trusthub-feedback-${buyerKey}`;
+        const savedFeedback = safeParse(localStorage.getItem(feedbackKey), []);
+        savedFeedback.unshift({
+          id: `FB-${Date.now()}`,
+          message,
+          buyer: buyer.name,
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem(feedbackKey, JSON.stringify(savedFeedback.slice(0, 20)));
+        feedbackTextarea.value = "";
+        showToast("Feedback saved. Thank you for helping improve TrustHub Africa.");
+      });
+
       buyerMarketSearch.addEventListener("input", applyMarketplaceFilters);
       buyerCategoryFilter.addEventListener("change", applyMarketplaceFilters);
 
