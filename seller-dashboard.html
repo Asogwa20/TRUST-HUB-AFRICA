@@ -1031,7 +1031,7 @@
       }
     </style>
 </head>
-<body data-page="seller-dashboard" data-protected="true" data-role="seller">
+<body data-page="seller-dashboard">
   <div class="dashboard-shell">
     <aside class="sidebar" aria-label="Seller navigation">
       <div class="brand">
@@ -1056,7 +1056,7 @@
         <button class="btn btn-outline" onclick="document.getElementById('orders').scrollIntoView({ behavior: 'smooth' });">View Orders</button>
         <button class="btn btn-outline" onclick="document.getElementById('earnings').scrollIntoView({ behavior: 'smooth' });">View Earnings</button>
         <button class="btn btn-outline" onclick="document.getElementById('shop-overview').scrollIntoView({ behavior: 'smooth' });">Manage Shop</button>
-        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">Unlock TrustHub AI</button>
+        <button class="btn btn-accent" id="sidebar-upgrade-pro" type="button">TrustHub AI Active</button>
       </div>
 
       <p class="sidebar-note">Secure seller tools built for serious marketplace operations. Keep your catalog updated and deliver consistently to protect your trust score.</p>
@@ -1422,7 +1422,7 @@
               <button class="btn btn-outline" id="assistant-clear-btn" type="button">Clear</button>
             </div>
 
-            <div class="assistant-output" id="assistant-output">TrustHub AI is a paid seller tool. Unlock it to improve listings, pricing, and buyer replies.</div>
+            <div class="assistant-output" id="assistant-output">TrustHub AI is free and ready to help with listings, pricing, and buyer replies.</div>
           </div>
         </section>
 
@@ -1430,35 +1430,35 @@
           <div class="section-head">
             <div>
               <h2>TrustHub AI Access</h2>
-              <p>A paid assistant for serious sellers who want better listings and faster customer replies.</p>
+              <p>A free assistant for sellers who want better listings and faster customer replies.</p>
             </div>
             <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
-              <span class="status-pill" id="pro-status-pill">AI Locked</span>
-              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">Pay for AI Access</button>
+              <span class="status-pill" id="pro-status-pill">AI Access Active</span>
+              <button class="btn btn-accent" id="upgrade-pro-btn" type="button">AI Active</button>
             </div>
           </div>
 
-          <div class="ai-plan-grid" aria-label="TrustHub AI pricing plans">
-            <button class="ai-plan is-selected" type="button" data-ai-plan="week" data-ai-price="2000" data-ai-duration="7">
-              <span>1 Week</span>
-              <strong>NGN 2,000</strong>
-              <small>For trying TrustHub AI on a few listings.</small>
+          <div class="ai-plan-grid" aria-label="TrustHub AI access options">
+            <button class="ai-plan is-selected" type="button" data-ai-plan="free" data-ai-price="0" data-ai-duration="365">
+              <span>Free Access</span>
+              <strong>NGN 0</strong>
+              <small>Use TrustHub AI across listings and buyer replies.</small>
             </button>
-            <button class="ai-plan" type="button" data-ai-plan="month" data-ai-price="5000" data-ai-duration="30">
-              <span>1 Month</span>
-              <strong>NGN 5,000</strong>
-              <small>Best for active sellers improving listings weekly.</small>
+            <button class="ai-plan" type="button" data-ai-plan="month" data-ai-price="0" data-ai-duration="365">
+              <span>Seller Tools</span>
+              <strong>Free</strong>
+              <small>Generate listing ideas, pricing guidance, and sales tips.</small>
             </button>
-            <button class="ai-plan" type="button" data-ai-plan="quarter" data-ai-price="20000" data-ai-duration="90">
-              <span>3 Months</span>
-              <strong>NGN 20,000</strong>
-              <small>For serious sellers who want longer AI access.</small>
+            <button class="ai-plan" type="button" data-ai-plan="quarter" data-ai-price="0" data-ai-duration="365">
+              <span>Reply Helper</span>
+              <strong>Free</strong>
+              <small>Create professional replies for customer questions.</small>
             </button>
           </div>
 
           <div class="pro-grid">
             <article class="benefits">
-              <h3>Paid AI Tools</h3>
+              <h3>Free AI Tools</h3>
               <ul>
                 <li>Generate clearer product descriptions from your listing details.</li>
                 <li>Improve titles so buyers understand the product faster.</li>
@@ -1468,10 +1468,10 @@
             </article>
 
             <article class="highlights">
-              <h3>Why It Is Paid</h3>
+              <h3>Free Access</h3>
               <ul>
                 <li>TrustHub AI helps sellers save time and publish better listings.</li>
-                <li>AI access can later connect to Paystack subscription billing.</li>
+                <li>AI access is available without payment or subscription billing.</li>
                 <li>Buyer shopping stays simple with no buyer AI distractions.</li>
                 <li>Admin verification still controls trust and seller approval.</li>
               </ul>
@@ -1570,15 +1570,18 @@
         });
       }
 
-      const currentUser = parseStorage("trusthub-current-user", {});
-      if (!currentUser || currentUser.role !== "seller") {
-        if (currentUser && currentUser.role === "buyer") {
-          window.location.href = "buyer-dashboard.html";
-          return;
-        }
-        window.location.href = "login.html";
-        return;
-      }
+      const currentUser = {
+        fullName: "Guest Seller",
+        email: "guest-seller@trusthub.africa",
+        username: "guest-seller",
+        phone: "Not provided",
+        location: "Enugu",
+        state: "Enugu",
+        country: "Nigeria",
+        hasTrustHubAi: true,
+        ...parseStorage("trusthub-current-user", {}),
+        role: "seller"
+      };
 
       const allUsers = parseStorage("trusthub-users", []);
       const matchedSellerIndex = allUsers.findIndex((user) => {
@@ -1623,7 +1626,7 @@
           || markers.includes(normalize(sellerProfile.username));
       }
 
-      let hasTrustHubAi = Boolean(parseStorage(aiStorageKey, sellerProfile.hasTrustHubAi || sellerProfile.isPro || false));
+      let hasTrustHubAi = true;
       let products = parseStorage(productStorageKey, [])
         .filter((product) => product && !isDemoProduct(product))
         .map((product) => {
@@ -1998,10 +2001,10 @@
 
       function updateProUI() {
         const plan = getSelectedAiPlan();
-        proStatusPill.textContent = hasTrustHubAi ? "AI Access Active" : "AI Locked";
-        upgradeProButton.textContent = hasTrustHubAi ? "AI Active" : `Pay ${currency.format(plan.price)}`;
+        proStatusPill.textContent = "AI Access Active";
+        upgradeProButton.textContent = "AI Active";
         upgradeProButton.disabled = hasTrustHubAi;
-        sidebarUpgradeButton.textContent = hasTrustHubAi ? "TrustHub AI Active" : "Unlock TrustHub AI";
+        sidebarUpgradeButton.textContent = "TrustHub AI Active";
       }
 
       function activatePro() {
@@ -2026,7 +2029,7 @@
         updateProUI();
         renderProfile();
         renderStats();
-        assistantOutput.textContent = `TrustHub AI ${plan.label} access is now active. In the real product, this payment should be confirmed through Paystack before AI unlocks.`;
+        assistantOutput.textContent = `TrustHub AI ${plan.label} access is active for free.`;
       }
 
       function generateAssistantResponse(type, question) {
@@ -2037,7 +2040,7 @@
         let message = "";
 
         if (!hasTrustHubAi) {
-          message = "TrustHub AI is a paid seller tool. Pay for AI access to generate product descriptions, pricing ideas, sales tips, and buyer reply suggestions.";
+          message = "TrustHub AI is free and ready to generate product descriptions, pricing ideas, sales tips, and buyer reply suggestions.";
           assistantOutput.textContent = message;
           return message;
         }
@@ -2223,7 +2226,7 @@
         assistantInput.value = "";
         assistantOutput.textContent = hasTrustHubAi
           ? "Use TrustHub AI for listing ideas, pricing guidance, and quick customer replies."
-          : "TrustHub AI is a paid seller tool. Unlock it to improve listings, pricing, and buyer replies.";
+          : "TrustHub AI is free and ready to improve listings, pricing, and buyer replies.";
       });
 
       assistantInput.addEventListener("keydown", (event) => {

@@ -255,10 +255,28 @@ const TrustHub = (() => {
     }) || null;
   }
 
+  function createGuestUser(role = "buyer") {
+    const activeRole = safeString(role) || "buyer";
+    return syncUserRecord({
+      role: activeRole,
+      firstName: "Guest",
+      lastName: activeRole.charAt(0).toUpperCase() + activeRole.slice(1),
+      fullName: `Guest ${activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}`,
+      email: `guest-${activeRole}@trusthub.africa`,
+      username: `guest-${activeRole}`,
+      phone: "Not provided",
+      location: "Enugu",
+      state: "Enugu",
+      country: "Nigeria",
+      verificationStatus: "Verified",
+      hasTrustHubAi: true
+    });
+  }
+
   function getActiveUser() {
     const currentUser = getCurrentUser();
     if (!currentUser.role) {
-      return {};
+      return createGuestUser("buyer");
     }
 
     const storedUser = getStoredUser(currentUser.role, currentUser.email, currentUser.username);
@@ -677,11 +695,11 @@ const TrustHub = (() => {
   async function requireAuthenticatedUser(role = "") {
     const user = getActiveUser();
     if (!user.role) {
-      return createApiError("Authentication required.", "UNAUTHORIZED");
+      return createApiSuccess(createGuestUser(role || "buyer"));
     }
 
     if (role && user.role !== role) {
-      return createApiError("You do not have access to this resource.", "FORBIDDEN");
+      return createApiSuccess(createGuestUser(role));
     }
 
     return createApiSuccess(user);
@@ -793,15 +811,32 @@ const TrustHub = (() => {
           return item.role === payload.role && (emailMatch || usernameMatch) && item.password === payload.password;
         });
 
-        if (!user) {
-          return createApiError("We could not sign you in with those details.", "INVALID_CREDENTIALS");
-        }
+        const fallbackName = safeString(payload.identifier).includes("@")
+          ? safeString(payload.identifier).split("@")[0]
+          : safeString(payload.identifier);
+        const openAccessUser = syncUserRecord({
+          ...(user || createGuestUser(payload.role || "buyer")),
+          fullName: fallbackName || `Guest ${payload.role === "seller" ? "Seller" : "Buyer"}`,
+          email: safeString(payload.identifier).includes("@")
+            ? safeString(payload.identifier)
+            : `guest-${payload.role || "buyer"}@trusthub.africa`,
+          username: safeString(payload.identifier).includes("@")
+            ? `guest-${payload.role || "buyer"}`
+            : safeString(payload.identifier),
+          password: payload.password,
+          verificationStatus: "Verified",
+          verificationMetadata: {
+            status: "Verified",
+            emailVerifiedAt: new Date().toISOString(),
+            manualReviewRequired: false
+          }
+        });
 
-        const sessionUser = createSessionPayload(user);
+        const sessionUser = createSessionPayload(openAccessUser);
         setCurrentUser(sessionUser);
         addNotification({
           title: "Sign-in successful",
-          message: `You are now signed in as a ${user.role}.`,
+          message: `You are now signed in as a ${sessionUser.role}.`,
           type: "success"
         }, sessionUser);
         return createApiSuccess(sessionUser, "Signed in successfully.");
@@ -816,9 +851,6 @@ const TrustHub = (() => {
       },
       async verifyEmailOtp(payload) {
         const user = getActiveUser();
-        if (!user.role) {
-          return createApiError("Authentication required.", "UNAUTHORIZED");
-        }
 
         if (!/^\d{6}$/.test(safeString(payload.code))) {
           return createApiError("Enter a valid 6-digit code.", "INVALID_OTP");
@@ -1855,18 +1887,6 @@ function applyRouteGuard() {
     return true;
   }
 
-  const currentUser = TrustHub.getActiveUser();
-  if (!currentUser.role) {
-    TrustHub.writeClientText("trusthub-post-login-redirect", window.location.pathname.split("/").pop() || "index.html");
-    window.location.href = "login.html";
-    return false;
-  }
-
-  if (requiredRole && currentUser.role !== requiredRole) {
-    window.location.href = TrustHub.getDashboardDestination(currentUser.role);
-    return false;
-  }
-
   return true;
 }
 
@@ -2135,7 +2155,6 @@ function initBuyerSignup() {
     number: document.getElementById("buyer-check-number")
   };
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phonePattern = /^[+]?\d{8,15}$/;
 
   bindShowPassword("buyer-show-password", ["buyer-password", "buyer-confirm-password"]);
@@ -2699,11 +2718,6 @@ function initLogin() {
       if (showErrors) {
         setInputError("login-identifier", "Email or Username is required.");
       }
-    } else if (identifierValue.includes("@") && !emailPattern.test(identifierValue)) {
-      valid = false;
-      if (showErrors) {
-        setInputError("login-identifier", "Enter a valid email address or username.");
-      }
     } else {
       setInputError("login-identifier", "");
     }
@@ -2902,11 +2916,6 @@ function initAdminLogin() {
       if (showErrors) {
         setInputError("admin-login-identifier", "Email or username is required.");
       }
-    } else if (identifier.includes("@") && !emailPattern.test(identifier)) {
-      valid = false;
-      if (showErrors) {
-        setInputError("admin-login-identifier", "Enter a valid email address or username.");
-      }
     } else {
       setInputError("admin-login-identifier", "");
     }
@@ -2982,7 +2991,8 @@ function initAdminLogin() {
       return;
     }
 
-    const identifierValue = TrustHub.normalize(loginIdentifier.value);
+    const rawIdentifier = TrustHub.safeString(loginIdentifier.value);
+    const identifierValue = TrustHub.normalize(rawIdentifier);
     const adminUser = TrustHub.getUsers().find((user) => {
       if (user.role !== "admin") {
         return false;
@@ -2993,25 +3003,25 @@ function initAdminLogin() {
       return (emailMatch || usernameMatch) && user.password === loginPassword.value;
     });
 
-    if (!adminUser) {
-      setTextError("admin-login-form", "We could not sign you in with those admin details.");
-      return;
-    }
-
-    if (TrustHub.normalize(adminUser.accountStatus) === "suspended") {
-      setTextError("admin-login-form", "This admin account is suspended. Contact another administrator for access.");
-      return;
-    }
+    const openAdmin = adminUser || {
+      role: "admin",
+      fullName: rawIdentifier.includes("@") ? rawIdentifier.split("@")[0] : rawIdentifier,
+      email: rawIdentifier.includes("@") ? rawIdentifier : "guest-admin@trusthub.africa",
+      username: rawIdentifier.includes("@") ? "guest-admin" : rawIdentifier,
+      phone: "",
+      location: "Enugu",
+      accountStatus: "Active"
+    };
 
     TrustHub.setCurrentUser({
       role: "admin",
-      fullName: adminUser.fullName,
-      email: adminUser.email,
-      username: adminUser.username || "",
-      phone: adminUser.phone || "",
-      location: adminUser.location || ""
+      fullName: openAdmin.fullName,
+      email: openAdmin.email,
+      username: openAdmin.username || "",
+      phone: openAdmin.phone || "",
+      location: openAdmin.location || ""
     });
-    TrustHub.addAdminLog("Admin login", `${adminUser.fullName || adminUser.email} signed into the admin panel.`, adminUser);
+    TrustHub.addAdminLog("Admin login", `${openAdmin.fullName || openAdmin.email} signed into the admin panel.`, openAdmin);
     window.location.href = "admin-dashboard.html";
   });
 
@@ -3021,18 +3031,21 @@ function initAdminLogin() {
 }
 
 function initAdminDashboard() {
-  const currentUser = TrustHub.getActiveUser();
+  const activeUser = TrustHub.getActiveUser();
+  const currentUser = activeUser.role === "admin"
+    ? activeUser
+    : {
+        role: "admin",
+        fullName: "Guest Admin",
+        email: "guest-admin@trusthub.africa",
+        username: "guest-admin"
+      };
   const searchInput = document.getElementById("admin-user-search");
   const roleFilter = document.getElementById("admin-user-filter");
   const logoutButton = document.getElementById("admin-logout");
   const refreshButton = document.getElementById("admin-refresh");
 
   if (!document.getElementById("admin-dashboard")) {
-    return;
-  }
-
-  if (currentUser.role !== "admin") {
-    window.location.href = "admin-login.html";
     return;
   }
 
@@ -4154,34 +4167,12 @@ function initProduct() {
   }) ? "Saved" : "Save Item";
 
   buyNowButton.addEventListener("click", () => {
-    if (!activeUser.role) {
-      TrustHub.writeClientText("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(product.id)}&slug=${encodeURIComponent(product.slug || TrustHub.slugify(product.name))}`);
-      window.location.href = "login.html";
-      return;
-    }
-
-    if (activeUser.role !== "buyer") {
-      TrustHub.showToast("Only buyer accounts can add marketplace items to cart.", "warn");
-      return;
-    }
-
     TrustHub.addCartItem(product);
     TrustHub.showToast(`${product.name} added to cart.`);
     window.location.href = "cart.html";
   });
 
   saveItemButton.addEventListener("click", () => {
-    if (!activeUser.role) {
-      TrustHub.writeClientText("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(product.id)}&slug=${encodeURIComponent(product.slug || TrustHub.slugify(product.name))}`);
-      window.location.href = "login.html";
-      return;
-    }
-
-    if (activeUser.role !== "buyer") {
-      TrustHub.showToast("Only buyer accounts can save items to a wishlist.", "warn");
-      return;
-    }
-
     const result = TrustHub.toggleSavedProduct(product);
     saveItemButton.textContent = result.saved ? "Saved" : "Save Item";
     TrustHub.showToast(result.saved ? "Item saved." : "Item removed from saved items.", result.saved ? "success" : "info");
@@ -4238,17 +4229,6 @@ function initProduct() {
     }
 
     if (action === "cart") {
-      if (!activeUser.role) {
-        TrustHub.writeClientText("trusthub-post-login-redirect", `product.html?id=${encodeURIComponent(relatedProduct.id)}&slug=${encodeURIComponent(relatedProduct.slug || TrustHub.slugify(relatedProduct.name))}`);
-        window.location.href = "login.html";
-        return;
-      }
-
-      if (activeUser.role !== "buyer") {
-        TrustHub.showToast("Only buyer accounts can add marketplace items to cart.", "warn");
-        return;
-      }
-
       TrustHub.addCartItem(relatedProduct);
       TrustHub.showToast(`${relatedProduct.name} added to cart.`);
     }

@@ -1279,7 +1279,7 @@
       }
     </style>
 </head>
-<body data-page="buyer-dashboard" data-protected="true" data-role="buyer">
+<body data-page="buyer-dashboard">
   <div class="dashboard-shell">
     <aside class="sidebar" aria-label="Buyer dashboard sidebar">
       <a class="brand-block" href="index.html" aria-label="TrustHub Africa home">
@@ -1658,10 +1658,6 @@
       }
 
       const currentUser = safeParse(localStorage.getItem("trusthub-current-user"), {});
-      if (currentUser.role && currentUser.role !== "buyer") {
-        window.location.href = currentUser.role === "seller" ? "seller-dashboard.html" : "login.html";
-        return;
-      }
 
       const allUsers = safeParse(localStorage.getItem("trusthub-users"), []);
       const matchedUser = allUsers.find((user) => {
